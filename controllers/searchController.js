@@ -1,9 +1,10 @@
 const books = require('spiritist-books');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
+const BOOKSPERPAGE = 10;
 
 const getBooks = async (req, res) => {
-  let { query, tags } = req.query;
+  let { query, tags, page } = req.query;
   let booksMatched;
 
   if (query) {
@@ -13,27 +14,36 @@ const getBooks = async (req, res) => {
       if (
         tags === 'title' ||
         tags === 'originalPublisher' ||
-        tags === 'publishedYear' ||
-        tags === 'copyright' ||
         tags === 'currentPublisher'
       ) {
-        if (book[tags].toLowerCase().includes(query)) {
+        if (book[tags] && book[tags].toLowerCase().includes(query)) {
           return book;
         }
-      } else if (
-        tags === 'authors' ||
-        tags === 'spiritualAuthors' ||
-        tags === 'yearPsychography' ||
-        tags === 'isbn10' ||
-        tags === 'isbn13'
-      ) {
+      } else if (tags === 'publishedYear' || tags === 'copyright') {
+        if (book[tags] && book[tags] == query) {
+          return book;
+        }
+      } else if (tags === 'authors' || tags === 'spiritualAuthors') {
         return book[tags].find((tag) => tag.toLowerCase().includes(query));
       }
     });
   } else {
     booksMatched = books.all;
   }
-  res.status(StatusCodes.OK).json({ data: booksMatched });
+  const nbPages = Math.ceil(booksMatched.length / BOOKSPERPAGE);
+
+  page = page ? +page : 0;
+
+  page = page >= nbPages ? nbPages - 1 : page;
+
+  page = page < 0 ? 0 : page;
+
+  booksMatched = booksMatched.slice(
+    BOOKSPERPAGE * page,
+    (page + 1) * BOOKSPERPAGE
+  );
+
+  res.status(StatusCodes.OK).json({ data: booksMatched, nbPages, page });
 };
 
 const getSingleBook = async (req, res) => {
