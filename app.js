@@ -1,0 +1,113 @@
+require('dotenv').config();
+const path = require('path');
+const { readFileSync } = require('fs');
+
+// protocols
+const https = require('https');
+
+const credentials = {
+  pfx: readFileSync('/etc/scudella/scudella.pfx'),
+  passphrase: readFileSync('/etc/scudella/passphrase'),
+};
+
+require('express-async-errors');
+// express
+const express = require('express');
+const app = express();
+
+// database
+const connectDB = require('./db/connect');
+const mongoSanitize = require('express-mongo-sanitize');
+
+// other packages
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const rateLimiter = require('express-rate-limit');
+const helmet = require('helmet');
+const cors = require('cors');
+
+// routers
+
+const authRouter = require('./routes/authRoutes');
+const userRouter = require('./routes/userRoutes');
+const searchRouter = require('./routes/searchRouter');
+
+// middleware
+const notFoundMiddleware = require('./middleware/not-found');
+const errorHandlerMiddleware = require('./middleware/error-handler');
+
+app.set('trust proxy', 1);
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 400, // Limit each IP to 400 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  })
+);
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      scriptSrc: ["'self'", 'https://accounts.google.com/gsi/client'],
+      defaultSrc: ["'self'", 'https://accounts.google.com'],
+      styleSrc: [
+        "'self'",
+        'https://accounts.google.com/gsi/style',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/',
+        "'unsafe-inline'",
+      ],
+      imgSrc: [
+        "'self'",
+        'https://lh3.googleusercontent.com',
+        `${process.env.CLOUDINARY_IMAGES}`,
+      ],
+    },
+  })
+);
+app.use(
+  helmet.crossOriginOpenerPolicy({
+    policy: 'same-origin-allow-popups',
+  })
+);
+app.use(
+  helmet.referrerPolicy({
+    policy: 'strict-origin-when-cross-origin',
+  })
+);
+
+app.use(cors());
+
+// app.use(morgan('tiny'));
+
+// go through all middleware
+app.use(express.json());
+app.use(cookieParser(process.env.JWT_SECRET));
+app.use(mongoSanitize());
+
+// setup static and middleware
+app.use(express.static('./public'));
+
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/search', searchRouter);
+
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
+
+const httpsServer = https.createServer(credentials, app);
+
+const port = process.env.PORT || 5000;
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URL);
+    httpsServer.listen(
+      port,
+      console.log(`Server is listening on port ${port}...`)
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+start();
