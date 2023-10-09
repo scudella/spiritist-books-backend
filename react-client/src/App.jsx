@@ -1,14 +1,22 @@
-import { useState } from 'react';
-import './App.css';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <h1>Home</h1>,
+  },
+  {
+    path: '/about',
+    element: (
+      <div>
+        <h1>About page</h1>
+      </div>
+    ),
+  },
+]);
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <>
-      <h2>Spiritist books - React App</h2>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
