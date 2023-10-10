@@ -8,15 +8,20 @@ const Register = () => {
       <form className='form'>
         <Logo />
         <h4>Criar uma conta</h4>
-        <FormRow type='text' name='nome' defaultValue='edu' />
+        <FormRow type='text' name='name' labelText='nome' defaultValue='edu' />
         <FormRow
           type='text'
-          name='sobrenome'
+          name='lastname'
           labelText='sobrenome'
           defaultValue='liba'
         />
         <FormRow type='email' name='email' defaultValue='edu@gmail.com' />
-        <FormRow type='password' name='senha' defaultValue='secreto456' />
+        <FormRow
+          type='password'
+          name='passsword'
+          labelText='senha'
+          defaultValue='secreto456'
+        />
         <button type='submit' className='btn btn-block'>
           enviar
         </button>
