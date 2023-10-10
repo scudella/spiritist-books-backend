@@ -20,7 +20,7 @@ const Landing = () => {
             fonte de consulta rápida.
           </p>
           <Link to='/register' className='btn register-link'>
-            Registrar
+            Criar Conta
           </Link>
           <Link to='/login' className='btn'>
             Login / Demo
