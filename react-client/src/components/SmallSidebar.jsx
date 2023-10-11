@@ -1,6 +1,10 @@
 import styled from 'styled-components';
+import { useDashboardContext } from '../pages/DashboardLayout';
 
 const SmallSidebar = () => {
+  const data = useDashboardContext();
+  console.log(data);
+
   return <Wrapper>SmallSidebar</Wrapper>;
 };
 
