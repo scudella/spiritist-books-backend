@@ -2,9 +2,8 @@ import styled from 'styled-components';
 import { FaTimes } from 'react-icons/fa';
 import { useDashboardContext } from '../pages/DashboardLayout';
 import Logo from './Logo';
-import links from '../utils/links';
-import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import NavLinks from './NavLinks';
 
 const SmallSidebar = () => {
   const { showSidebar, toggleSidebar } = useDashboardContext();
@@ -24,23 +23,7 @@ const SmallSidebar = () => {
           <header>
             <Logo />
           </header>
-          <div className='nav-links'>
-            {links.map((link) => {
-              const { text, path, icon } = link;
-              return (
-                <NavLink
-                  to={path}
-                  key={t(text)}
-                  className='nav-link'
-                  onClick={toggleSidebar}
-                  end
-                >
-                  <span className='icon'>{icon}</span>
-                  {t(text)}
-                </NavLink>
-              );
-            })}
-          </div>
+          <NavLinks />
         </div>
       </div>
     </Wrapper>
