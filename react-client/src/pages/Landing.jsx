@@ -2,8 +2,11 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import main from '../assets/images/main.svg';
 import { Logo } from '../components';
+import { useTranslation, Trans } from 'react-i18next';
 
 const Landing = () => {
+  const { t } = useTranslation(['landing']);
+
   return (
     <Wrapper>
       <nav>
@@ -12,21 +15,25 @@ const Landing = () => {
       <div className='container page'>
         <div>
           <h1>
-            Livros <span>Espíritas</span>
+            <Trans i18nKey='landingTitle'>
+              Livros <span>Espíritas</span>
+            </Trans>
           </h1>
           <p>
-            Aqui você poderá consultar livros espíritas pelo autor, autor
-            espirital e título. O intuito deste app é educacional e ser uma
-            fonte de consulta rápida.
+            <Trans i18nKey='landingP'>
+              Aqui você poderá consultar livros espíritas pelo autor, autor
+              espirital e título. O intuito deste app é educacional e ser uma
+              fonte de consulta rápida.
+            </Trans>
           </p>
           <Link to='/register' className='btn register-link'>
-            Criar Conta
+            {t('Criar Conta')}
           </Link>
           <Link to='/login' className='btn'>
             Login / Demo
           </Link>
         </div>
-        <img src={main} alt='Prateleira de Livros' className='img main-img' />
+        <img src={main} alt={t('Estante de Livros')} className='img main-img' />
       </div>
     </Wrapper>
   );

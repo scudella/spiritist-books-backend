@@ -1,0 +1,9 @@
+{
+  "Criar uma conta": "register",
+  "nome": "name",
+  "sobrenome": "last name",
+  "senha": "password",
+  "enviar": "submit",
+  "Já tem conta": "Already a member",
+  "Fazer Login": "Login"
+}

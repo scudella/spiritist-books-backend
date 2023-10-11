@@ -1,30 +1,33 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FormRow, Logo } from '../components';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
+  const { t } = useTranslation(['login']);
+
   return (
     <Wrapper>
       <form className='form'>
         <Logo />
-        <h4> Fazer Login</h4>
+        <h4>{t('Fazer Login')}</h4>
         <FormRow type='email' name='email' defaultValue='edu@gmail.com' />
         <FormRow
           type='password'
           name='password'
-          labelText='senha'
+          labelText={t('senha')}
           defaultValue='secreto456'
         />
         <button type='submit' className='btn btn-block'>
-          enviar
+          {t('enviar')}
         </button>
         <button type='button' className='btn btn-block'>
-          explore o app
+          {t('explore o app')}
         </button>
         <p>
-          Não tem conta ainda?
+          {t('Não tem conta ainda')}?
           <Link to='/register' className='member-btn'>
-            Criar Conta
+            {t('Criar Conta')}
           </Link>
         </p>
       </form>

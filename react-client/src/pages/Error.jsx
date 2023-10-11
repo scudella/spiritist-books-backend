@@ -1,18 +1,22 @@
 import { Link, useRouteError } from 'react-router-dom';
 import styled from 'styled-components';
 import img from '../assets/images/not-found.svg';
+import { useTranslation } from 'react-i18next';
 
 const Error = () => {
+  const { t } = useTranslation(['error']);
   const error = useRouteError();
 
   if (error.status === 404) {
     return (
       <Wrapper>
         <div>
-          <img src={img} alt='não encontrada' />
-          <h3>Página não encontrada!</h3>
-          <p>parece que não encontramos a página que você está procurando</p>
-          <Link to='./dashboard'>página inicial</Link>
+          <img src={img} alt={t('não encontrada')} />
+          <h3>{t('Página não encontrada')}!</h3>
+          <p>
+            {t('parece que não encontramos a página que você está procurando')}
+          </p>
+          <Link to='./dashboard'>{t('página inicial')}</Link>
         </div>
       </Wrapper>
     );
@@ -20,7 +24,7 @@ const Error = () => {
   return (
     <Wrapper>
       <div>
-        <h3>alguma coisa saiu errada</h3>
+        <h3>{t('alguma coisa saiu errada')}</h3>
       </div>
     </Wrapper>
   );
