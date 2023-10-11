@@ -1,4 +1,8 @@
 {
   "landingTitle": "Livros <1>Espíritas</1>",
-  "landingP": "Aqui você poderá consultar livros espíritas pelo autor, autor espirital e título. O intuito deste app é educacional e ser uma fonte de consulta rápida."
+  "landingP": "Aqui você poderá consultar livros espíritas pelo autor, autor espirital e título. O intuito deste app é educacional e ser uma fonte de consulta rápida.",
+  "adicionar livro": "adicionar livro",
+  "todos os livros": "todos os livros",
+  "perfil": "perfil",
+  "admin": "admin"
 }

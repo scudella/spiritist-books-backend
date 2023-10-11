@@ -7,6 +7,9 @@ import {
   DashboardLayout,
   Admin,
   Error,
+  AddBook,
+  AllBooks,
+  Profile,
 } from './pages';
 
 const router = createBrowserRouter([
@@ -31,6 +34,18 @@ const router = createBrowserRouter([
         path: 'dashboard',
         element: <DashboardLayout />,
         children: [
+          {
+            index: true,
+            element: <AllBooks />,
+          },
+          {
+            path: 'add-book',
+            element: <AddBook />,
+          },
+          {
+            path: 'profile',
+            element: <Profile />,
+          },
           {
             path: 'admin',
             element: <Admin />,
