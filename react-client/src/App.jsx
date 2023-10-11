@@ -5,6 +5,7 @@ import {
   Register,
   Login,
   DashboardLayout,
+  Admin,
   Error,
 } from './pages';
 
@@ -29,6 +30,12 @@ const router = createBrowserRouter([
       {
         path: 'dashboard',
         element: <DashboardLayout />,
+        children: [
+          {
+            path: 'admin',
+            element: <Admin />,
+          },
+        ],
       },
     ],
   },
