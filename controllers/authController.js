@@ -17,7 +17,7 @@ const strongPasswordGenerator = require('strong-password-generator');
 const { avatar } = require('../utils/avatar');
 
 const register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, lastname } = req.body;
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
     throw new CustomError.BadRequestError('Email already exists');
@@ -36,6 +36,7 @@ const register = async (req, res) => {
     name,
     email,
     password,
+    lastname,
     role,
     verificationToken,
     picture,
@@ -44,7 +45,7 @@ const register = async (req, res) => {
   const origin = process.env.CLIENT_ORIGIN;
 
   await sendVerificationEmail({
-    name: user.name,
+    name: `${user.name} ${user.lastname}`,
     email: user.email,
     verificationToken: user.verificationToken,
     origin,
