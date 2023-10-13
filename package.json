@@ -4,18 +4,18 @@
   "description": "Spiritist Books backend",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
+    "setup-project": "npm i && cd react-client && npm i",
+    "server": "nodemon app.js",
     "debug": "nodemon --inspect app.js",
-    "bundle-dev": "webpack --config webpack.dev.js",
-    "bundle-prod": "webpack --config webpack.prod.js"
+    "client": "cd react-client && npm run dev",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scudella/spiritist-books-backend.git"
   },
   "keywords": [],
-  "author": "Eduardo S. Libardi",
+  "author": "Eduardo S. Libardi <devscudella@gmail.com> (https://portfolio.scudella.net.br/)",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "2.4.3",
@@ -43,6 +43,7 @@
     "@types/google.accounts": "0.0.7",
     "axios": "1.4.0",
     "clean-webpack-plugin": "4.0.0",
+    "concurrently": "8.2.1",
     "nodemon": "2.0.21",
     "ts-loader": "9.4.3",
     "typescript": "5.1.3",
