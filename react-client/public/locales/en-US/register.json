@@ -3,6 +3,7 @@
   "nome": "name",
   "sobrenome": "last name",
   "senha": "password",
+  "enviando...": "submitting...",
   "enviar": "submit",
   "Já tem conta": "Already a member",
   "Fazer Login": "Login"

@@ -1,14 +1,31 @@
-import { Link } from 'react-router-dom';
+import { Form, redirect, useNavigation, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FormRow, Logo } from '../components';
 import { useTranslation } from 'react-i18next';
+import customFetch from '../utils/customFetch';
+import { toast } from 'react-toastify';
+
+export const action = async ({ request }) => {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  try {
+    await customFetch.post('/auth/register', data);
+    toast.success('Registration Successful');
+    return redirect('/login'); // Only use redirect in action
+  } catch (error) {
+    toast.error(error?.response?.data?.msg);
+    return error;
+  }
+};
 
 const Register = () => {
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === 'submitting';
   const { t } = useTranslation(['register']);
 
   return (
     <Wrapper>
-      <form className='form'>
+      <Form method='post' className='form'>
         <Logo />
         <h4>{t('Criar uma conta')}</h4>
         <FormRow
@@ -19,19 +36,19 @@ const Register = () => {
         />
         <FormRow
           type='text'
-          name='lastname'
+          name='lastName'
           labelText={t('sobrenome')}
           defaultValue='liba'
         />
         <FormRow type='email' name='email' defaultValue='edu@gmail.com' />
         <FormRow
           type='password'
-          name='passsword'
+          name='password'
           labelText={t('senha')}
           defaultValue='secreto456'
         />
-        <button type='submit' className='btn btn-block'>
-          {t('enviar')}
+        <button type='submit' className='btn btn-block' disabled={isSubmitting}>
+          {isSubmitting ? t('enviando...') : t('enviar')}
         </button>
         <p>
           {t('Já tem conta')}?
@@ -39,7 +56,7 @@ const Register = () => {
             {t('Fazer Login')}
           </Link>
         </p>
-      </form>
+      </Form>
     </Wrapper>
   );
 };
