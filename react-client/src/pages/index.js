@@ -8,3 +8,5 @@ export { default as AllBooks } from './AllBooks';
 export { default as AddBook } from './AddBook';
 export { default as Profile } from './Profile';
 export { default as Admin } from './Admin';
+export { default as UserLayout } from './UserLayout';
+export { default as VerifyEmail } from './VerifyEmail';

@@ -10,6 +10,8 @@ import {
   AddBook,
   AllBooks,
   Profile,
+  UserLayout,
+  VerifyEmail,
 } from './pages';
 
 import { action as registerAction } from './pages/Register';
@@ -60,6 +62,16 @@ const router = createBrowserRouter([
           {
             path: 'admin',
             element: <Admin />,
+          },
+        ],
+      },
+      {
+        path: 'user',
+        element: <UserLayout />,
+        children: [
+          {
+            path: 'verify-email',
+            element: <VerifyEmail />,
           },
         ],
       },

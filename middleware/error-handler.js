@@ -11,7 +11,13 @@ const errorHandlerMiddleware = (err, req, res, next) => {
       .join(',');
     customError.statusCode = 400;
     if (customError.msg.includes('the minimum allowed length')) {
-      customError.msg = 'Password minimum length is 8';
+      if (customError.msg.includes('password')) {
+        customError.msg = 'Password minimum length is 8';
+      } else if (customError.msg.includes('lastName')) {
+        customError.msg = 'Last name minimum length is 2';
+      } else if (customError.msg.includes('name')) {
+        customError.msg = 'Name minimum length is 2';
+      }
     }
   }
   if (err.code && err.code === 11000) {

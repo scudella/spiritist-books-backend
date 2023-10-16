@@ -1,4 +1,11 @@
-import { Form, redirect, useNavigation, Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import {
+  Form,
+  useNavigation,
+  useNavigate,
+  Link,
+  useActionData,
+} from 'react-router-dom';
 import styled from 'styled-components';
 import { FormRow, Logo } from '../components';
 import { useTranslation } from 'react-i18next';
@@ -10,18 +17,34 @@ export const action = async ({ request }) => {
   const data = Object.fromEntries(formData);
   try {
     await customFetch.post('/auth/register', data);
-    toast.success('Registration Successful');
-    return redirect('/login'); // Only use redirect in action
+    return {
+      result: 'success',
+    };
   } catch (error) {
-    toast.error(error?.response?.data?.msg);
-    return error;
+    const message = error?.response?.data?.msg;
+    return {
+      result: 'error',
+      message,
+    };
   }
 };
 
 const Register = () => {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === 'submitting';
+  const navigate = useNavigate();
   const { t } = useTranslation(['register']);
+  const actionData = useActionData();
+
+  useEffect(() => {
+    if (actionData?.result === 'success') {
+      toast.success(t('Conta criada com sucesso!'));
+      toast.success(t('Por favor verifique seu email para ativar a conta'));
+      navigate('/login');
+    } else if (actionData?.result === 'error') {
+      toast.error(t(actionData.message));
+    }
+  }, [actionData]);
 
   return (
     <Wrapper>

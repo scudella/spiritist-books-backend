@@ -6,5 +6,12 @@
   "enviando...": "submitting...",
   "enviar": "submit",
   "Já tem conta": "Already a member",
-  "Fazer Login": "Login"
+  "Fazer Login": "Login",
+  "Conta criada com sucesso!": "Registration Successful!",
+  "Por favor verifique seu email para ativar a conta": "Please check your email to verify account",
+  "Email already exists": "Email already exists",
+  "Password minimum length is 8": "Password minimum length is 8",
+  "Name minimum length is 2": "Name minimum length is 2",
+  "Last name minimum length is 2": "Last name minimum length is 2",
+  "Please provide valid email": "Please provide valid email"
 }
