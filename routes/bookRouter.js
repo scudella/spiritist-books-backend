@@ -3,9 +3,10 @@ const router = express.Router();
 const {
   getBooks,
   getSingleBook,
-} = require('../controllers/searchController.js');
+  addBook,
+} = require('../controllers/BookController.js');
 
-router.route('/').get(getBooks);
+router.route('/').get(getBooks).post(addBook);
 router.route('/:id').get(getSingleBook);
 
 module.exports = router;

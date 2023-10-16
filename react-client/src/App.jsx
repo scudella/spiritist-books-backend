@@ -16,6 +16,7 @@ import {
 
 import { action as registerAction } from './pages/Register';
 import { action as loginAction } from './pages/Login';
+import { action as addBookAction } from './pages/AddBook';
 
 import { loader as dashboardLoader } from './pages/DashboardLayout';
 
@@ -59,6 +60,7 @@ const router = createBrowserRouter([
           {
             path: 'add-book',
             element: <AddBook />,
+            action: addBookAction,
           },
           {
             path: 'profile',

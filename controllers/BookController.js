@@ -57,4 +57,9 @@ const getSingleBook = async (req, res) => {
   res.status(StatusCodes.OK).json({ book });
 };
 
-module.exports = { getBooks, getSingleBook };
+const addBook = async (req, res) => {
+  console.log(req.body);
+  res.status(StatusCodes.OK).json();
+};
+
+module.exports = { getBooks, getSingleBook, addBook };

@@ -30,7 +30,7 @@ const cors = require('cors');
 
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
-const searchRouter = require('./routes/searchRouter');
+const bookRouter = require('./routes/bookRouter');
 
 // middleware
 const notFoundMiddleware = require('./middleware/not-found');
@@ -92,7 +92,7 @@ app.use(express.static('./public'));
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/search', searchRouter);
+app.use('/api/v1/books', bookRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
