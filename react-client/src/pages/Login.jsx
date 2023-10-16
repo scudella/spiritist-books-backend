@@ -1,14 +1,53 @@
-import { Link } from 'react-router-dom';
+import {
+  Link,
+  Form,
+  useNavigation,
+  useNavigate,
+  useActionData,
+} from 'react-router-dom';
 import styled from 'styled-components';
 import { FormRow, Logo } from '../components';
 import { useTranslation } from 'react-i18next';
+import customFetch from '../utils/customFetch';
+import { toast } from 'react-toastify';
+import { useEffect } from 'react';
+
+export const action = async ({ request }) => {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  try {
+    await customFetch.post('/auth/login', data);
+    return {
+      result: 'success',
+    };
+  } catch (error) {
+    const message = error?.response?.data?.msg;
+    return {
+      result: 'error',
+      message,
+    };
+  }
+};
 
 const Login = () => {
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === 'submitting';
+  const navigate = useNavigate();
   const { t } = useTranslation(['login']);
+  const actionData = useActionData();
+
+  useEffect(() => {
+    if (actionData?.result === 'success') {
+      toast.success(t('Login realizado com sucesso'));
+      navigate('/dashboard');
+    } else if (actionData?.result === 'error') {
+      toast.error(t(actionData.message));
+    }
+  }, [actionData]);
 
   return (
     <Wrapper>
-      <form className='form'>
+      <Form method='post' className='form'>
         <Logo />
         <h4>{t('Fazer Login')}</h4>
         <FormRow type='email' name='email' defaultValue='edu@gmail.com' />
@@ -18,8 +57,8 @@ const Login = () => {
           labelText={t('senha')}
           defaultValue='secreto456'
         />
-        <button type='submit' className='btn btn-block'>
-          {t('enviar')}
+        <button type='submit' className='btn btn-block' disabled={isSubmitting}>
+          {isSubmitting ? t('enviando...') : t('enviar')}
         </button>
         <button type='button' className='btn btn-block'>
           {t('explore o app')}
@@ -30,7 +69,7 @@ const Login = () => {
             {t('Criar Conta')}
           </Link>
         </p>
-      </form>
+      </Form>
     </Wrapper>
   );
 };

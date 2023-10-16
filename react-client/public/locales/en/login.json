@@ -2,7 +2,11 @@
   "Fazer Login": "login",
   "senha": "password",
   "enviar": "submit",
+  "enviando...": "submitting...",
   "explore o app": "explore the app",
   "Não tem conta ainda": "Not a member yet",
-  "Criar Conta": "Register"
+  "Criar Conta": "Register",
+  "Login realizado com sucesso": "login successful",
+  "Invalid Credentials": "Invalid Credentials",
+  "Please, verify your email": "Please, verify your email"
 }
