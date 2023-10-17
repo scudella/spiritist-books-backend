@@ -11,6 +11,7 @@ import { FormRow, Logo } from '../components';
 import { useTranslation } from 'react-i18next';
 import customFetch from '../utils/customFetch';
 import { toast } from 'react-toastify';
+import axiosError from '../utils/axiosError';
 
 export const action = async ({ request }) => {
   const formData = await request.formData();
@@ -21,7 +22,7 @@ export const action = async ({ request }) => {
       result: 'success',
     };
   } catch (error) {
-    const message = error?.response?.data?.msg;
+    const message = axiosError(error);
     return {
       result: 'error',
       message,

@@ -13,5 +13,7 @@
   "Password minimum length is 8": "Password minimum length is 8",
   "Name minimum length is 2": "Name minimum length is 2",
   "Last name minimum length is 2": "Last name minimum length is 2",
-  "Please provide valid email": "Please provide valid email"
+  "Please provide valid email": "Please provide valid email",
+  "Internal Server Error": "Internal Server Error",
+  "No server response": "No server response"
 }

@@ -4,5 +4,7 @@
   "adicionar livro": "adicionar livro",
   "todos os livros": "todos os livros",
   "perfil": "perfil",
-  "admin": "admin"
+  "admin": "admin",
+  "Internal Server Error": "Erro interno do servidor",
+  "No server response": "Sem resposta do servidor"
 }

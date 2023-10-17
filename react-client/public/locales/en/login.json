@@ -8,5 +8,7 @@
   "Criar Conta": "Register",
   "Login realizado com sucesso": "login successful",
   "Invalid Credentials": "Invalid Credentials",
-  "Please, verify your email": "Please, verify your email"
+  "Please, verify your email": "Please, verify your email",
+  "Internal Server Error": "Internal Server Error",
+  "No server response": "No server response"
 }

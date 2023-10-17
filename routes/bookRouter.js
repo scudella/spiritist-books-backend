@@ -6,6 +6,10 @@ const {
   addBook,
   editBook,
 } = require('../controllers/BookController.js');
+const {
+  authenticateUser,
+  authorizePermissions,
+} = require('../middleware/authentication');
 
 router
   .route('/')

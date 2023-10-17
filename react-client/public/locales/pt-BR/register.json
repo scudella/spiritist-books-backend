@@ -13,5 +13,7 @@
   "Password minimum length is 8": "Senha com tamanho mínimo de 8",
   "Name minimum length is 2": "Nome com tamanho mínimo de 2",
   "Last name minimum length is 2": "Sobrenome com tamanho mínimo de 2",
-  "Please provide valid email": "Por favor forneça um email válido"
+  "Please provide valid email": "Por favor forneça um email válido",
+  "Internal Server Error": "Erro interno do servidor",
+  "No server response": "Sem resposta do servidor"
 }

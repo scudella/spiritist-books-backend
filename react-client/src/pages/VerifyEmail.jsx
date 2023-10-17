@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Logo } from '../components';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import axiosError from '../utils/axiosError';
 
 const VerifyEmail = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,7 +22,7 @@ const VerifyEmail = () => {
         toast.success(t('Conta Confirmada'));
         setAccountVerified(true);
       } catch (error) {
-        const message = error?.response?.data?.msg;
+        const message = axiosError(error);
         toast.error(t(message));
         setAccountVerified(false);
         return error;

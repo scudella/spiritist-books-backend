@@ -1,5 +1,7 @@
 {
   "Conta Confirmada": "Account Confirmed",
   "Verification failed": "Verification failed",
-  "Verificação de Conta": "Verify Email"
+  "Verificação de Conta": "Verify Email",
+  "Internal Server Error": "Internal Server Error",
+  "No server response": "No server response"
 }
