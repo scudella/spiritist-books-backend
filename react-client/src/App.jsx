@@ -12,6 +12,7 @@ import {
   Profile,
   UserLayout,
   VerifyEmail,
+  EditBook,
 } from './pages';
 
 import { action as registerAction } from './pages/Register';
@@ -19,6 +20,7 @@ import { action as loginAction } from './pages/Login';
 import { action as addBookAction } from './pages/AddBook';
 
 import { loader as dashboardLoader } from './pages/DashboardLayout';
+import { loader as allBooksLoader } from './pages/AllBooks';
 
 const checkDefaultTheme = () => {
   const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
@@ -56,6 +58,7 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <AllBooks />,
+            loader: allBooksLoader,
           },
           {
             path: 'add-book',
@@ -69,6 +72,10 @@ const router = createBrowserRouter([
           {
             path: 'admin',
             element: <Admin />,
+          },
+          {
+            path: 'edit-book',
+            element: <EditBook />,
           },
         ],
       },

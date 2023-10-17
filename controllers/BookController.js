@@ -43,7 +43,7 @@ const getBooks = async (req, res) => {
     (page + 1) * BOOKSPERPAGE
   );
 
-  res.status(StatusCodes.OK).json({ data: booksMatched, nbPages, page });
+  res.status(StatusCodes.OK).json({ books: booksMatched, nbPages, page });
 };
 
 const getSingleBook = async (req, res) => {
@@ -62,4 +62,9 @@ const addBook = async (req, res) => {
   res.status(StatusCodes.OK).json();
 };
 
-module.exports = { getBooks, getSingleBook, addBook };
+const editBook = async (req, res) => {
+  console.log(req.body);
+  res.status(StatusCodes.OK).json();
+};
+
+module.exports = { getBooks, getSingleBook, addBook, editBook };
