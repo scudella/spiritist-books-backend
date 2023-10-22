@@ -4,8 +4,10 @@ import { Link, Form } from 'react-router-dom';
 import styled from 'styled-components';
 import BookInfo from './BookInfo';
 import { useTranslation } from 'react-i18next';
+import { DeleteBook } from '../pages';
 
 const Book = ({
+  index,
   title,
   authors,
   spiritualAuthors,
@@ -47,8 +49,10 @@ const Book = ({
         </div>
         {user.role === 'admin' && (
           <footer className='actions'>
-            <Link className='btn edit-btn'>{t('Editar')}</Link>
-            <Form>
+            <Link to={`/dashboard/edit-book/${index}`} className='btn edit-btn'>
+              {t('Editar')}
+            </Link>
+            <Form method='post' action={`delete-book/${index}`}>
               <button type='submit' className='btn delete-btn'>
                 {t('Remover')}
               </button>

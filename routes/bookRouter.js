@@ -5,6 +5,7 @@ const {
   getSingleBook,
   addBook,
   editBook,
+  deleteBook,
 } = require('../controllers/BookController.js');
 const {
   authenticateUser,
@@ -14,8 +15,12 @@ const {
 router
   .route('/')
   .get(getBooks)
-  .post(authenticateUser, authorizePermissions('admin'), addBook)
-  .patch(authenticateUser, authorizePermissions('admin'), editBook);
-router.route('/:id').get(getSingleBook);
+  .post(authenticateUser, authorizePermissions('admin'), addBook);
+
+router
+  .route('/:id')
+  .get(getSingleBook)
+  .patch(authenticateUser, authorizePermissions('admin'), editBook)
+  .delete(authenticateUser, authorizePermissions('admin'), deleteBook);
 
 module.exports = router;

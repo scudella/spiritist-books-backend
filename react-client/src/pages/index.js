@@ -11,3 +11,4 @@ export { default as Admin } from './Admin';
 export { default as UserLayout } from './UserLayout';
 export { default as VerifyEmail } from './VerifyEmail';
 export { default as EditBook } from './EditBook';
+export { default as DeleteBook } from './DeleteBook';

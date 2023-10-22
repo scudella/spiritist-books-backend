@@ -4,5 +4,18 @@
   "Espíritos Diversos": "Several Spirits",
   "Editar": "Edit",
   "Remover": "Delete",
-  "Não há livros para mostrar...": "No books to display..."
+  "Não há livros para mostrar...": "No books to display...",
+  "Livro removido com sucesso": "Book deleted successfully",
+  "Livro editado com sucesso": "Book edited successfully",
+  "Editar o livro": "edit book",
+  "título": "title",
+  "Autor(a)": "author",
+  "Autores(as)": "authors",
+  "editora original": "original publisher",
+  "editora atual": "current publisher",
+  "ano da publicação": "published year",
+  "ano da psicogragia": "year of psychography",
+  "ano(s) da psicografia": "year(s) of psychography",
+  "enviando...": "submitting...",
+  "enviar": "submit"
 }

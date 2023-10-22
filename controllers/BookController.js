@@ -67,4 +67,9 @@ const editBook = async (req, res) => {
   res.status(StatusCodes.OK).json();
 };
 
-module.exports = { getBooks, getSingleBook, addBook, editBook };
+const deleteBook = async (req, res) => {
+  console.log(req.params);
+  res.status(StatusCodes.OK).json();
+};
+
+module.exports = { getBooks, getSingleBook, addBook, editBook, deleteBook };

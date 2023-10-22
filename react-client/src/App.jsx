@@ -13,14 +13,18 @@ import {
   UserLayout,
   VerifyEmail,
   EditBook,
+  DeleteBook,
 } from './pages';
 
 import { action as registerAction } from './pages/Register';
 import { action as loginAction } from './pages/Login';
 import { action as addBookAction } from './pages/AddBook';
+import { action as editBookAction } from './pages/EditBook';
+import { action as deleteBookAction } from './pages/DeleteBook';
 
 import { loader as dashboardLoader } from './pages/DashboardLayout';
 import { loader as allBooksLoader } from './pages/AllBooks';
+import { loader as editBookLoader } from './pages/EditBook';
 
 const checkDefaultTheme = () => {
   const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
@@ -74,8 +78,15 @@ const router = createBrowserRouter([
             element: <Admin />,
           },
           {
-            path: 'edit-book',
+            path: 'edit-book/:id',
             element: <EditBook />,
+            loader: editBookLoader,
+            action: editBookAction,
+          },
+          {
+            path: 'delete-book/:id',
+            element: <DeleteBook />,
+            action: deleteBookAction,
           },
         ],
       },
