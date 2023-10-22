@@ -25,6 +25,7 @@ import { action as deleteBookAction } from './pages/DeleteBook';
 import { loader as dashboardLoader } from './pages/DashboardLayout';
 import { loader as allBooksLoader } from './pages/AllBooks';
 import { loader as editBookLoader } from './pages/EditBook';
+import { loader as adminLoader } from './pages/Admin';
 
 const checkDefaultTheme = () => {
   const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
@@ -76,6 +77,7 @@ const router = createBrowserRouter([
           {
             path: 'admin',
             element: <Admin />,
+            loader: adminLoader,
           },
           {
             path: 'edit-book/:id',

@@ -11,6 +11,7 @@ const {
   showCurrentUser,
   updateUser,
   updateUserPassword,
+  getApplicationStats,
 } = require('../controllers/userController');
 
 router
@@ -19,6 +20,9 @@ router
 router.route('/showMe').get(authenticateUser, showCurrentUser);
 router.route('/updateUser').patch(authenticateUser, updateUser);
 router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword);
+router
+  .route('/admin/app-stats')
+  .get(authenticateUser, authorizePermissions('admin'), getApplicationStats);
 router.route('/:id').get(authenticateUser, getSingleUser); // needs to come last
 
 module.exports = router;

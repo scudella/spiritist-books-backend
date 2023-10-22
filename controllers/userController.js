@@ -6,6 +6,7 @@ const {
   attachCookiesToResponse,
   checkPermissions,
 } = require('../utils');
+const books = require('spiritist-books');
 
 const getAllUsers = async (req, res) => {
   const users = await User.find({ role: 'user' }).select('-password');
@@ -59,10 +60,17 @@ const updateUserPassword = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'Success! Password updated' });
 };
 
+const getApplicationStats = async (req, res) => {
+  const users = await User.countDocuments();
+  const bookCount = books.all.length;
+  res.status(StatusCodes.OK).json({ users, bookCount });
+};
+
 module.exports = {
   getAllUsers,
   getSingleUser,
   showCurrentUser,
   updateUser,
   updateUserPassword,
+  getApplicationStats,
 };
