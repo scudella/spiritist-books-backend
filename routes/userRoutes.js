@@ -14,11 +14,15 @@ const {
   getApplicationStats,
 } = require('../controllers/userController');
 
+const upload = require('../middleware/multer');
+
 router
   .route('/')
   .get(authenticateUser, authorizePermissions('admin'), getAllUsers);
 router.route('/showMe').get(authenticateUser, showCurrentUser);
-router.route('/updateUser').patch(authenticateUser, updateUser);
+router
+  .route('/update-user')
+  .patch(authenticateUser, upload.single('avatar'), updateUser);
 router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword);
 router
   .route('/admin/app-stats')

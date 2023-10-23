@@ -21,6 +21,7 @@ import { action as loginAction } from './pages/Login';
 import { action as addBookAction } from './pages/AddBook';
 import { action as editBookAction } from './pages/EditBook';
 import { action as deleteBookAction } from './pages/DeleteBook';
+import { action as profileAction } from './pages/Profile';
 
 import { loader as dashboardLoader } from './pages/DashboardLayout';
 import { loader as allBooksLoader } from './pages/AllBooks';
@@ -73,6 +74,7 @@ const router = createBrowserRouter([
           {
             path: 'profile',
             element: <Profile />,
+            action: profileAction,
           },
           {
             path: 'admin',

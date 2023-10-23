@@ -1,0 +1,14 @@
+{
+  "perfil": "perfil",
+  "Selecione um arquivo de imagem (máx. 0.5 MB)": "Selecione um arquivo de imagem (máx. 0.5 MB)",
+  "nome": "nome",
+  "sobrenome": "sobrenome",
+  "Email (requer confirmação)": "Email (requer confirmação)",
+  "enviando...": "enviando...",
+  "enviar": "enviar",
+  "Tamanho da imagem muito grande": "Tamanho da imagem muito grande",
+  "Por favor verifique seu email para ativar a conta": "Por favor verifique seu email para ativar a conta",
+  "email already exists": "email já utilizado",
+  "Perfil atualizado com sucesso": "Perfil atualizado com sucesso",
+  "Please provide valid email": "Por favor forneça um email válido"
+}

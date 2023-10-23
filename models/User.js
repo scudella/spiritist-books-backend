@@ -56,6 +56,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     maxlength: 120,
   },
+  picturePublicId: String,
 });
 
 UserSchema.pre('save', async function () {

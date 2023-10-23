@@ -25,6 +25,13 @@ const cookieParser = require('cookie-parser');
 const rateLimiter = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('cors');
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 
 // routers
 
@@ -87,7 +94,6 @@ app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(mongoSanitize());
 
-// setup static and middleware
 app.use(express.static('./public'));
 
 app.use('/api/v1/auth', authRouter);
