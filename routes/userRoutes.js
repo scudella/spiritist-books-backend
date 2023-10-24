@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   authenticateUser,
   authorizePermissions,
+  checkForTestUser,
 } = require('../middleware/authentication');
 
 const {
@@ -22,7 +23,12 @@ router
 router.route('/showMe').get(authenticateUser, showCurrentUser);
 router
   .route('/update-user')
-  .patch(authenticateUser, upload.single('avatar'), updateUser);
+  .patch(
+    authenticateUser,
+    checkForTestUser,
+    upload.single('avatar'),
+    updateUser
+  );
 router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword);
 router
   .route('/admin/app-stats')

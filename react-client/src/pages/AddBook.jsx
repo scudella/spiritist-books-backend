@@ -1,29 +1,42 @@
 import { FormRow } from '../components';
 import styled from 'styled-components';
-import { useOutletContext } from 'react-router-dom';
-import { Form, useNavigation, redirect } from 'react-router-dom';
+import {
+  useActionData,
+  useNavigate,
+  Form,
+  useNavigation,
+} from 'react-router-dom';
 import { toast } from 'react-toastify';
 import customFetch from '../utils/customFetch';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
 export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   try {
     await customFetch.post('/books', data);
-    toast.success('Book added successfully');
-    return redirect('/dashboard');
+    return { result: 'success' };
   } catch (error) {
-    toast.error(error?.response?.data?.msg);
-    return error;
+    return { result: 'error', message: error?.response?.data?.msg };
   }
 };
 
 const AddBook = () => {
-  const { user } = useOutletContext();
   const navigation = useNavigation();
+  const actionData = useActionData();
+  const navigate = useNavigate();
   const isSubmitting = navigation.state === 'submitting';
   const { t } = useTranslation('addBook');
+
+  useEffect(() => {
+    if (actionData?.result === 'success') {
+      toast.success(t('Livro adicionado com sucesso'));
+      navigate('/dashboard');
+    } else if (actionData?.result === 'error') {
+      toast.error(t(actionData.message));
+    }
+  }, [actionData]);
 
   return (
     <Wrapper>

@@ -37,6 +37,21 @@ const Login = () => {
   const { t } = useTranslation(['login']);
   const actionData = useActionData();
 
+  const loginDemoUser = async () => {
+    const data = {
+      email: 'books@example.com',
+      password: 'secret123',
+    };
+    try {
+      await customFetch.post('/auth/login', data);
+      toast.success(t('Faça um test drive'));
+      navigate('/dashboard');
+    } catch (error) {
+      toast.error(t(error?.response?.data?.msg));
+      return error;
+    }
+  };
+
   useEffect(() => {
     if (actionData?.result === 'success') {
       toast.success(t('Login realizado com sucesso'));
@@ -61,7 +76,7 @@ const Login = () => {
         <button type='submit' className='btn btn-block' disabled={isSubmitting}>
           {isSubmitting ? t('enviando...') : t('enviar')}
         </button>
-        <button type='button' className='btn btn-block'>
+        <button type='button' className='btn btn-block' onClick={loginDemoUser}>
           {t('explore o app')}
         </button>
         <p>

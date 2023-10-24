@@ -43,7 +43,7 @@ const Profile = () => {
     } else if (actionData?.result === 'error') {
       toast.error(t(actionData.error?.response?.data?.msg));
     }
-  }, [actionData?.result]);
+  }, [actionData]);
 
   return (
     <Wrapper>

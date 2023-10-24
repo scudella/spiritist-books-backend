@@ -11,7 +11,8 @@ const authenticateUser = async (req, res, next) => {
   try {
     if (accessToken) {
       const payload = isTokenValid(accessToken);
-      req.user = payload.user;
+      const testUser = payload.user.email === 'books@example.com';
+      req.user = { ...payload.user, testUser };
       return next();
     }
     const payload = isTokenValid(refreshToken);
@@ -27,7 +28,9 @@ const authenticateUser = async (req, res, next) => {
       user: payload.user,
       refreshToken: existingToken.refreshToken,
     });
-    req.user = payload.user;
+
+    const testUser = payload.user.email === 'books@example.com';
+    req.user = { ...payload.user, testUser };
     next();
   } catch (error) {
     throw new CustomError.UnauthenticatedError('Authentication Invalid!');
@@ -83,9 +86,16 @@ const authenticateWsUser = async (req) => {
     console.log(error);
   }
 };
+const checkForTestUser = (req, res, next) => {
+  if (req.user.testUser) {
+    throw new CustomError.BadRequestError('Demo user. Read Only!');
+  }
+  next();
+};
 
 module.exports = {
   authenticateUser,
   authorizePermissions,
   authenticateWsUser,
+  checkForTestUser,
 };

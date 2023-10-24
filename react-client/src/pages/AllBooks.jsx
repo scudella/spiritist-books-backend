@@ -21,14 +21,16 @@ export const loader = async () => {
 const AllBooksContext = createContext();
 
 const AllBooks = () => {
-  const { result, data, message } = useLoaderData();
+  const loaderData = useLoaderData();
   const { user } = useOutletContext();
 
   useEffect(() => {
-    if (result === 'error') {
-      toast.error(message);
+    if (loaderData?.result === 'error') {
+      toast.error(loaderData.message);
     }
-  }, [result]);
+  }, [loaderData]);
+
+  const data = loaderData?.data ? loaderData.data : null;
 
   return (
     <AllBooksContext.Provider value={{ data }}>
