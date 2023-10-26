@@ -23,7 +23,7 @@ const Book = ({
         <div className='main-icon'>{authors[0].charAt(0)}</div>
         <div className='info'>
           <h5>{title}</h5>
-          <p>{authors}</p>
+          <p>{authors.toString()}</p>
         </div>
       </header>
       <div className='content'>

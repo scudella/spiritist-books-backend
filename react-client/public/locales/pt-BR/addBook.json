@@ -1,7 +1,9 @@
 {
   "adicionar livro": "adicionar livro",
   "autores espirituais": "autores espirituais",
+  "autor / autora espiritual": "autor / autora espiritual",
   "título": "título",
+  "autor/a": "autor / autora",
   "autores": "autores",
   "editora original": "editora original",
   "editora atual": "editora atual",
@@ -10,5 +12,12 @@
   "enviando...": "enviando...",
   "enviar": "enviar",
   "Livro adicionado com sucesso": "Livro adicionado com sucesso",
-  "Unauthorized to access this route": "Você não tem autorização para acessar esta rota"
+  "Unauthorized to access this route": "Você não tem autorização para acessar esta rota",
+  "consulta": "consulta",
+  "ordenar": "ordenar",
+  "mais recente": "mais recente",
+  "mais antigo": "mais antigo",
+  "a-z": "a-z",
+  "z-a": "z-a",
+  "Limpar os valores da consulta": "Limpar os valores da consulta"
 }

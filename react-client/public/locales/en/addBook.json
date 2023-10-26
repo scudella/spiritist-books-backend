@@ -1,8 +1,10 @@
 {
   "adicionar livro": "add book",
   "autores espirituais": "spiritual authors",
+  "autor / autora espiritual": "spiritual author",
   "título": "title",
   "autores": "authors",
+  "autor/a": "author",
   "editora original": "original publisher",
   "editora atual": "current publisher",
   "ano publicação": "published year",
@@ -10,5 +12,12 @@
   "enviando...": "submitting...",
   "enviar": "submit",
   "Livro adicionado com sucesso": "Book added successfully",
-  "Unauthorized to access this route": "Unauthorized to access this route"
+  "Unauthorized to access this route": "Unauthorized to access this route",
+  "consulta": "search",
+  "ordenar": "sort",
+  "mais recente": "newest",
+  "mais antigo": "oldest",
+  "a-z": "a-z",
+  "z-a": "z-a",
+  "Limpar os valores da consulta": "Reset Search Values"
 }

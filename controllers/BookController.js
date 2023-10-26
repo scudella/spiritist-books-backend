@@ -1,41 +1,80 @@
 const books = require('spiritist-books');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
+const {
+  filterBooksByString,
+  filterBooksByStringNumber,
+  filterBooksByArray,
+  sortBooks,
+} = require('../utils');
 const BOOKSPERPAGE = 10;
 
 const getBooks = async (req, res) => {
-  let { query, tags, page } = req.query;
-  let booksMatched;
+  let {
+    title,
+    authors,
+    spiritualAuthors,
+    originalPublisher,
+    currentPublisher,
+    publishedYear,
+    page,
+    sort,
+  } = req.query;
 
-  if (query) {
-    query = query.toLowerCase();
+  let booksMatched = books.all;
 
-    booksMatched = books.all.filter((book) => {
-      if (
-        tags === 'title' ||
-        tags === 'originalPublisher' ||
-        tags === 'currentPublisher'
-      ) {
-        if (book[tags] && book[tags].toLowerCase().includes(query)) {
-          return book;
-        }
-      } else if (tags === 'publishedYear' || tags === 'copyright') {
-        if (book[tags] && book[tags] == query) {
-          return book;
-        }
-      } else if (tags === 'authors' || tags === 'spiritualAuthors') {
-        return book[tags].find((tag) => tag.toLowerCase().includes(query));
-      }
-    });
-  } else {
-    booksMatched = books.all;
+  if (
+    title ||
+    originalPublisher ||
+    currentPublisher ||
+    publishedYear ||
+    authors ||
+    spiritualAuthors
+  ) {
+    if (title) {
+      booksMatched = filterBooksByString(booksMatched, 'title', title);
+    }
+    if (originalPublisher) {
+      booksMatched = filterBooksByString(
+        booksMatched,
+        'originalPublisher',
+        originalPublisher
+      );
+    }
+    if (currentPublisher) {
+      booksMatched = filterBooksByString(
+        booksMatched,
+        'currentPublisher',
+        currentPublisher
+      );
+    }
+    if (publishedYear) {
+      booksMatched = filterBooksByStringNumber(
+        booksMatched,
+        'publishedYear',
+        publishedYear
+      );
+    }
+    if (authors) {
+      booksMatched = filterBooksByArray(booksMatched, 'authors', authors);
+    }
+    if (spiritualAuthors) {
+      booksMatched = filterBooksByArray(
+        booksMatched,
+        'spiritualAuthors',
+        spiritualAuthors
+      );
+    }
   }
+
+  if (sort) {
+    booksMatched = sortBooks(booksMatched, sort);
+  }
+
   const nbPages = Math.ceil(booksMatched.length / BOOKSPERPAGE);
 
   page = page ? +page : 0;
-
   page = page >= nbPages ? nbPages - 1 : page;
-
   page = page < 0 ? 0 : page;
 
   booksMatched = booksMatched.slice(

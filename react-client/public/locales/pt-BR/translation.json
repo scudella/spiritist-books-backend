@@ -6,5 +6,7 @@
   "perfil": "perfil",
   "admin": "admin",
   "Internal Server Error": "Erro interno do servidor",
-  "No server response": "Sem resposta do servidor"
+  "No server response": "Sem resposta do servidor",
+  "enviando...": "enviando...",
+  "enviar": "enviar"
 }

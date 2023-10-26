@@ -6,5 +6,7 @@
   "perfil": "profile",
   "admin": "admin",
   "Internal Server Error": "Internal Server Error",
-  "No server response": "No server response"
+  "No server response": "No server response",
+  "enviando...": "submitting...",
+  "enviar": "submit"
 }

@@ -8,6 +8,12 @@ const createHash = require('./createHash');
 const { logError, logComment } = require('./logs');
 const { defaultPasswordConfig } = require('./strongPassword');
 const { avatar } = require('./avatar');
+const {
+  filterBooksByString,
+  filterBooksByStringNumber,
+  filterBooksByArray,
+  sortBooks,
+} = require('./filterBooks');
 
 module.exports = {
   createJWT,
@@ -21,6 +27,10 @@ module.exports = {
   createHash,
   logError,
   logComment,
+  filterBooksByString,
+  filterBooksByStringNumber,
+  filterBooksByArray,
+  sortBooks,
   defaultPasswordConfig,
   avatar,
 };
