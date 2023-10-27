@@ -2,10 +2,11 @@ import Book from './Book';
 import styled from 'styled-components';
 import { useAllBooksContext } from '../pages/AllBooks';
 import { useTranslation } from 'react-i18next';
+import PageBtnContainer from './PageBtnContainer';
 
 const BooksContainer = ({ user }) => {
   const { data } = useAllBooksContext();
-  const { books, nbPages, page } = data;
+  const { books, nbPages, totalBooks } = data;
   const { t } = useTranslation('book');
 
   if (books.length === 0) {
@@ -18,11 +19,15 @@ const BooksContainer = ({ user }) => {
 
   return (
     <Wrapper>
+      <h5>
+        {totalBooks} book{books.length > 1 && 's'} found
+      </h5>
       <div className='books'>
         {books.map((book) => {
           return <Book key={book.index} {...book} user={user} />;
         })}
       </div>
+      {nbPages > 1 && <PageBtnContainer />}
     </Wrapper>
   );
 };

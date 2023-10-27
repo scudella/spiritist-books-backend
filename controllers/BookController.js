@@ -71,18 +71,22 @@ const getBooks = async (req, res) => {
     booksMatched = sortBooks(booksMatched, sort);
   }
 
+  const totalBooks = booksMatched.length;
+
   const nbPages = Math.ceil(booksMatched.length / BOOKSPERPAGE);
 
-  page = page ? +page : 0;
-  page = page >= nbPages ? nbPages - 1 : page;
-  page = page < 0 ? 0 : page;
+  page = isNaN(+page) ? 1 : +page;
+  page = page > nbPages ? nbPages : page;
+  page = page < 1 ? 1 : page;
 
   booksMatched = booksMatched.slice(
-    BOOKSPERPAGE * page,
-    (page + 1) * BOOKSPERPAGE
+    BOOKSPERPAGE * (page - 1),
+    page * BOOKSPERPAGE
   );
 
-  res.status(StatusCodes.OK).json({ books: booksMatched, nbPages, page });
+  res
+    .status(StatusCodes.OK)
+    .json({ books: booksMatched, nbPages, page, totalBooks });
 };
 
 const getSingleBook = async (req, res) => {
