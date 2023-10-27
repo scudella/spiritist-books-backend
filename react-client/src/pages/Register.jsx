@@ -52,25 +52,10 @@ const Register = () => {
       <Form method='post' className='form'>
         <Logo />
         <h4>{t('Criar uma conta')}</h4>
-        <FormRow
-          type='text'
-          name='name'
-          labelText={t('nome')}
-          defaultValue='edu'
-        />
-        <FormRow
-          type='text'
-          name='lastName'
-          labelText={t('sobrenome')}
-          defaultValue='liba'
-        />
-        <FormRow type='email' name='email' defaultValue='edu@gmail.com' />
-        <FormRow
-          type='password'
-          name='password'
-          labelText={t('senha')}
-          defaultValue='secreto456'
-        />
+        <FormRow type='text' name='name' labelText={t('nome')} />
+        <FormRow type='text' name='lastName' labelText={t('sobrenome')} />
+        <FormRow type='email' name='email' />
+        <FormRow type='password' name='password' labelText={t('senha')} />
         <button type='submit' className='btn btn-block' disabled={isSubmitting}>
           {isSubmitting ? t('enviando...') : t('enviar')}
         </button>

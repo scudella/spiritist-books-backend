@@ -66,13 +66,8 @@ const Login = () => {
       <Form method='post' className='form'>
         <Logo />
         <h4>{t('Fazer Login')}</h4>
-        <FormRow type='email' name='email' defaultValue='edu@gmail.com' />
-        <FormRow
-          type='password'
-          name='password'
-          labelText={t('senha')}
-          defaultValue='secreto456'
-        />
+        <FormRow type='email' name='email' />
+        <FormRow type='password' name='password' labelText={t('senha')} />
         <button type='submit' className='btn btn-block' disabled={isSubmitting}>
           {isSubmitting ? t('enviando...') : t('enviar')}
         </button>
