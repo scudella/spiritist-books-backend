@@ -10,8 +10,8 @@ const {
 } = require('../utils');
 const books = require('spiritist-books');
 const cloudinary = require('cloudinary').v2;
-const { unlink } = require('node:fs/promises');
 const crypto = require('crypto');
+const { formatImage } = require('../middleware/multer');
 
 const getAllUsers = async (req, res) => {
   const users = await User.find({ role: 'user' }).select('-password');
@@ -54,11 +54,11 @@ const updateUser = async (req, res) => {
   }
 
   if (req.file) {
+    const file = formatImage(req.file);
     try {
-      const response = await cloudinary.uploader.upload(req.file.path, {
+      const response = await cloudinary.uploader.upload(file, {
         folder: process.env.CLOUDINARY_FOLDER,
       });
-      await unlink(req.file.path);
       newUser.picture = response.secure_url;
       newUser.picturePublicId = response.public_id;
     } catch (error) {

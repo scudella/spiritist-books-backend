@@ -15,7 +15,7 @@ const {
   getApplicationStats,
 } = require('../controllers/userController');
 
-const upload = require('../middleware/multer');
+const { upload } = require('../middleware/multer');
 
 router
   .route('/')

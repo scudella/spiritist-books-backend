@@ -100,6 +100,11 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/books', bookRouter);
 
+// Send front-end files directly from client/dist
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './-react-client/dist', 'index.html'));
+});
+
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
