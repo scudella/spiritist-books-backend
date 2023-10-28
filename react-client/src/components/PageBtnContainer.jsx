@@ -2,6 +2,7 @@ import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi';
 import { useAllBooksContext } from '../pages/AllBooks';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const PageBtnContainer = () => {
   const {
@@ -13,6 +14,8 @@ const PageBtnContainer = () => {
 
   const { search, pathname } = useLocation();
   const navigate = useNavigate();
+
+  const { t } = useTranslation('book');
 
   const handlePageChange = (pageNumber) => {
     const searchparams = new URLSearchParams(search);
@@ -109,7 +112,7 @@ const PageBtnContainer = () => {
         }}
       >
         <HiChevronDoubleLeft />
-        prev
+        {t('ant')}
       </button>
       <div className='btn-container'>{renderPageButtons()}</div>
       <button
@@ -122,7 +125,7 @@ const PageBtnContainer = () => {
           handlePageChange(nextPage);
         }}
       >
-        next
+        {t('post')}
         <HiChevronDoubleRight />
       </button>
     </Wrapper>

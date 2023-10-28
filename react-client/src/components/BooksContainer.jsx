@@ -20,7 +20,9 @@ const BooksContainer = ({ user }) => {
   return (
     <Wrapper>
       <h5>
-        {totalBooks} book{books.length > 1 && 's'} found
+        {totalBooks} {t('livro')}
+        {books.length > 1 && 's'}{' '}
+        {books.length === 1 ? t('encontrado') : t('encontrados')}
       </h5>
       <div className='books'>
         {books.map((book) => {
