@@ -22,7 +22,6 @@ const mongoSanitize = require('express-mongo-sanitize');
 // other packages
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const rateLimiter = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('cors');
 const cloudinary = require('cloudinary').v2;
@@ -44,14 +43,6 @@ const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
 app.set('trust proxy', 1);
-app.use(
-  rateLimiter({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 400, // Limit each IP to 400 requests per `window` (here, per 15 minutes)
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  })
-);
 
 app.use(
   helmet.contentSecurityPolicy({
