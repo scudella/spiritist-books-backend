@@ -2,14 +2,15 @@
   "name": "spiritist-books-backend",
   "version": "1.1.0",
   "description": "Spiritist Books backend",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "setup-project": "npm i && cd react-client && npm i",
     "setup-production-app": "npm i && cd react-client && npm i &&  npm run build",
-    "server": "nodemon app.js",
-    "debug": "nodemon --inspect app.js",
+    "server": "nodemon server.js",
+    "debug": "nodemon --inspect server.js",
     "client": "cd react-client && npm run dev",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
