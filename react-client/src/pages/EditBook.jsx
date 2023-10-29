@@ -42,7 +42,6 @@ export const action = async ({ request, params }) => {
   const isbn13 = data.isbn13;
   data.isbn13 = isbn13.split(',').map((isbn) => isbn.trim());
 
-  console.log(data);
   try {
     await customFetch.patch(`/books/${params.id}`, data);
     return { result: 'success-action' };

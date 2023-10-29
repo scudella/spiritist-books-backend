@@ -8,5 +8,6 @@
   "Internal Server Error": "Internal Server Error",
   "No server response": "No server response",
   "enviando...": "submitting...",
-  "enviar": "submit"
+  "enviar": "submit",
+  "Ocorreu um erro...": "There was an error..."
 }

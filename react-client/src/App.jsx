@@ -15,6 +15,7 @@ import {
   EditBook,
   DeleteBook,
 } from './pages';
+import ErrorElement from './components/ErrorElement';
 
 import { action as registerAction } from './pages/Register';
 import { action as loginAction } from './pages/Login';
@@ -65,27 +66,32 @@ const router = createBrowserRouter([
             index: true,
             element: <AllBooks />,
             loader: allBooksLoader,
+            errorElement: <ErrorElement />,
           },
           {
             path: 'add-book',
             element: <AddBook />,
             action: addBookAction,
+            errorElement: <ErrorElement />,
           },
           {
             path: 'profile',
             element: <Profile />,
             action: profileAction,
+            errorElement: <ErrorElement />,
           },
           {
             path: 'admin',
             element: <Admin />,
             loader: adminLoader,
+            errorElement: <ErrorElement />,
           },
           {
             path: 'edit-book/:id',
             element: <EditBook />,
             loader: editBookLoader,
             action: editBookAction,
+            errorElement: <ErrorElement />,
           },
           {
             path: 'delete-book/:id',
