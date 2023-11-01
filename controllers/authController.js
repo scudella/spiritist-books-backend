@@ -34,9 +34,9 @@ const register = async (req, res) => {
 
   const user = await User.create({
     name,
+    lastName,
     email,
     password,
-    lastName,
     role,
     verificationToken,
     picture,
@@ -59,6 +59,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password, credential, checkbox } = req.body;
   let user;
+  let userCreated = false;
 
   if (!credential && (!email || !password)) {
     throw new CustomError.BadRequestError('Please provide email and password');
@@ -67,12 +68,19 @@ const login = async (req, res) => {
   // credential from google login
   if (credential) {
     try {
-      const { sub, email, email_verified, name, picture } =
-        await verifyGoogleJWT(credential);
+      const {
+        sub,
+        email,
+        email_verified,
+        given_name: name,
+        family_name: lastName,
+        picture,
+      } = await verifyGoogleJWT(credential);
       user = await User.findOne({ email });
       if (!user) {
         // user does not exist. register required and done here.
         // if exists nothing else required
+        // email_verified at Google, not local db
         if (!email_verified) {
           throw new CustomError.BadRequestError(
             'Please provide valid gmail credentials'
@@ -81,6 +89,7 @@ const login = async (req, res) => {
         const password = strongPasswordGenerator.generatePassword();
         user = await User.create({
           name,
+          lastName,
           email,
           password,
           role: 'user',
@@ -90,10 +99,16 @@ const login = async (req, res) => {
           picture,
           sub,
         });
+        userCreated = true;
       } else {
-        if (checkbox) {
+        if (checkbox === 'true') {
           await User.findOneAndUpdate({ email }, { picture });
           user.picture = picture;
+        }
+        if (user.sub === '') {
+          // user may have been created through regular email / password
+          // perhaps did not verify the email. We do not touch that part.
+          await User.findOneAndUpdate({ email }, { sub });
         }
       }
     } catch (error) {
@@ -144,8 +159,13 @@ const login = async (req, res) => {
   const userToken = { refreshToken, ip, userAgent, user: user._id };
 
   await Token.create(userToken);
-
   attachCookiesToResponse({ res, user: tokenUser, refreshToken });
+
+  if (userCreated) {
+    res.status(StatusCodes.CREATED).json({ user: tokenUser });
+    return;
+  }
+
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 

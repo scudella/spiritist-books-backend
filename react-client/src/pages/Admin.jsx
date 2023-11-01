@@ -19,7 +19,6 @@ export const loader = async ({}) => {
 
 const Admin = () => {
   const loaderData = useLoaderData();
-  console.log(loaderData);
   const navigate = useNavigate();
   const { t } = useTranslation('admin');
 

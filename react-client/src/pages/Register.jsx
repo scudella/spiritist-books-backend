@@ -5,28 +5,62 @@ import {
   useNavigate,
   Link,
   useActionData,
+  useLoaderData,
 } from 'react-router-dom';
 import styled from 'styled-components';
-import { FormRow, Logo } from '../components';
+import { FormRow, Logo, GoogleButton } from '../components';
 import { useTranslation } from 'react-i18next';
 import customFetch from '../utils/customFetch';
 import { toast } from 'react-toastify';
 import axiosError from '../utils/axiosError';
 
+export const loader = async () => {
+  try {
+    const { data } = await customFetch.get(`/auth/show-web-id`);
+    return { result: 'success', clientId: data.clientId };
+  } catch (error) {
+    const loaderMessage = axiosError(error);
+    return { result: 'error-loader', message: loaderMessage };
+  }
+};
+
 export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-  try {
-    await customFetch.post('/auth/register', data);
-    return {
-      result: 'success',
-    };
-  } catch (error) {
-    const message = axiosError(error);
-    return {
-      result: 'error',
-      message,
-    };
+  if (data.credential) {
+    // google credentials; run login in the backend instead
+    try {
+      const result = await customFetch.post('/auth/login', data);
+      if (result.statusText === 'Created') {
+        return {
+          result: 'success-reg-login',
+        };
+      } else {
+        return {
+          result: 'success-login',
+        };
+      }
+    } catch (error) {
+      const message = axiosError(error);
+      return {
+        result: 'error',
+        message,
+      };
+    }
+  } else {
+    // regular register
+    try {
+      await customFetch.post('/auth/register', data);
+      return {
+        result: 'success-register',
+      };
+    } catch (error) {
+      const message = axiosError(error);
+      return {
+        result: 'error',
+        message,
+      };
+    }
   }
 };
 
@@ -36,12 +70,20 @@ const Register = () => {
   const navigate = useNavigate();
   const { t } = useTranslation(['register']);
   const actionData = useActionData();
+  const loaderData = useLoaderData();
+  const clientId = loaderData?.clientId;
 
   useEffect(() => {
-    if (actionData?.result === 'success') {
+    if (actionData?.result === 'success-register') {
       toast.success(t('Conta criada com sucesso!'));
       toast.success(t('Por favor verifique seu email para ativar a conta'));
       navigate('/login');
+    } else if (actionData?.result === 'success-reg-login') {
+      toast.success(t('Conta criada com sucesso'));
+      navigate('/dashboard');
+    } else if (actionData?.result === 'success-login') {
+      toast.success(t('Login realizado com sucesso'));
+      navigate('/dashboard');
     } else if (actionData?.result === 'error') {
       toast.error(t(actionData.message));
     }
@@ -59,6 +101,7 @@ const Register = () => {
         <button type='submit' className='btn btn-block' disabled={isSubmitting}>
           {isSubmitting ? t('enviando...') : t('enviar')}
         </button>
+        <GoogleButton clientId={clientId} register />
         <p>
           {t('Já tem conta')}?
           <Link to='/login' className='member-btn'>

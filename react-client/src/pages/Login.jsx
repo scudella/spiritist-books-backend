@@ -4,18 +4,31 @@ import {
   useNavigation,
   useNavigate,
   useActionData,
+  useLoaderData,
 } from 'react-router-dom';
 import styled from 'styled-components';
-import { FormRow, Logo } from '../components';
+import { FormRow, Logo, GoogleButton } from '../components';
 import { useTranslation } from 'react-i18next';
 import customFetch from '../utils/customFetch';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import axiosError from '../utils/axiosError';
 
+export const loader = async () => {
+  try {
+    const { data } = await customFetch.get(`/auth/show-web-id`);
+    return { result: 'success', clientId: data.clientId };
+  } catch (error) {
+    const loaderMessage = axiosError(error);
+    return { result: 'error-loader', message: loaderMessage };
+  }
+};
+
 export const action = async ({ request }) => {
+  // email and password || credentials
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
+
   try {
     await customFetch.post('/auth/login', data);
     return {
@@ -36,6 +49,8 @@ const Login = () => {
   const navigate = useNavigate();
   const { t } = useTranslation(['login']);
   const actionData = useActionData();
+  const loaderData = useLoaderData();
+  const clientId = loaderData?.clientId;
 
   const loginDemoUser = async () => {
     const data = {
@@ -58,12 +73,14 @@ const Login = () => {
       navigate('/dashboard');
     } else if (actionData?.result === 'error') {
       toast.error(t(actionData.message));
+    } else if (loaderData?.result === 'error-loader') {
+      toast.error(t(loaderData.message));
     }
   }, [actionData]);
 
   return (
     <Wrapper>
-      <Form method='post' className='form'>
+      <Form method='post' className='form login-form'>
         <Logo />
         <h4>{t('Fazer Login')}</h4>
         <FormRow type='email' name='email' />
@@ -74,6 +91,7 @@ const Login = () => {
         <button type='button' className='btn btn-block' onClick={loginDemoUser}>
           {t('explore o app')}
         </button>
+        <GoogleButton clientId={clientId} />
         <p>
           {t('Não tem conta ainda')}?
           <Link to='/register' className='member-btn'>
@@ -120,5 +138,8 @@ const Wrapper = styled.section`
     color: var(--primary-500);
     letter-spacing: var(--letter-spacing);
     margin-left: 0.25rem;
+  }
+  .login-form {
+    max-width: 450px;
   }
 `;

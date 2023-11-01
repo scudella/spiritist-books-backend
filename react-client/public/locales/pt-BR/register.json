@@ -15,5 +15,6 @@
   "Last name minimum length is 2": "Sobrenome com tamanho mínimo de 2",
   "Please provide valid email": "Por favor forneça um email válido",
   "Internal Server Error": "Erro interno do servidor",
-  "No server response": "Sem resposta do servidor"
+  "No server response": "Sem resposta do servidor",
+  "Login realizado com sucesso": "Login realizado com sucesso"
 }

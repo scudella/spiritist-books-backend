@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Suspense fallback={<Loading />}>
       <App />
-      <ToastContainer position='top-center' />
+      <ToastContainer position='top-center' autoClose={3000} />
     </Suspense>
   </React.StrictMode>
 );
