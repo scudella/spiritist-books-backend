@@ -1,4 +1,5 @@
-const books = require('spiritist-books');
+const spiritistBooksModule = require('spiritist-books/dist/index.cjs');
+const books = spiritistBooksModule.default;
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const {

@@ -1,0 +1,20 @@
+{
+  "Criar uma conta": "Criar uma conta",
+  "nome": "nome",
+  "sobrenome": "sobrenome",
+  "senha": "senha",
+  "enviando...": "enviando...",
+  "enviar": "enviar",
+  "Já tem conta": "Já tem conta",
+  "Fazer Login": "Fazer Login",
+  "Conta criada com sucesso!": "Conta criada com sucesso!",
+  "Por favor verifique seu email para ativar a conta": "Por favor verifique seu email para ativar a conta",
+  "Email already exists": "Email já utilizado",
+  "Password minimum length is 8": "Senha com tamanho mínimo de 8",
+  "Name minimum length is 2": "Nome com tamanho mínimo de 2",
+  "Last name minimum length is 2": "Sobrenome com tamanho mínimo de 2",
+  "Please provide valid email": "Por favor forneça um email válido",
+  "Internal Server Error": "Erro interno do servidor",
+  "No server response": "Sem resposta do servidor",
+  "Login realizado com sucesso": "Login realizado com sucesso"
+}

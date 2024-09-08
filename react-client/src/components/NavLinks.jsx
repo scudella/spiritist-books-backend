@@ -12,7 +12,8 @@ const NavLinks = ({ isBigSidebar }) => {
       {links.map((link) => {
         const { text, path, icon } = link;
         const { role } = user;
-        if (path === 'admin' && role !== 'admin') return;
+        if ((path === 'admin' || path === 'add-book') && role !== 'admin')
+          return;
         return (
           <NavLink
             to={path}
@@ -29,4 +30,5 @@ const NavLinks = ({ isBigSidebar }) => {
     </div>
   );
 };
+
 export default NavLinks;

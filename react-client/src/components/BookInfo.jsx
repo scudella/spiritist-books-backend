@@ -25,5 +25,6 @@ const Wrapper = styled.div`
   .book-text {
     text-transform: capitalize;
     letter-spacing: var(--letter-spacing);
+    padding: 0.125rem;
   }
 `;

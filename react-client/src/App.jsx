@@ -9,6 +9,7 @@ import {
   Error,
   AddBook,
   AllBooks,
+  SingleBook,
   Profile,
   UserLayout,
   VerifyEmail,
@@ -28,6 +29,7 @@ import { action as profileAction } from './pages/Profile';
 import { loader as dashboardLoader } from './pages/DashboardLayout';
 import { loader as allBooksLoader } from './pages/AllBooks';
 import { loader as editBookLoader } from './pages/EditBook';
+import { loader as SingleBookLoader } from './pages/SingleBook';
 import { loader as adminLoader } from './pages/Admin';
 import { loader as loginLoader } from './pages/Login';
 import { loader as registerLoader } from './pages/Register';
@@ -102,6 +104,12 @@ const router = createBrowserRouter([
             path: 'delete-book/:id',
             element: <DeleteBook />,
             action: deleteBookAction,
+          },
+          {
+            path: 'single-book/:id',
+            element: <SingleBook />,
+            loader: SingleBookLoader,
+            errorElement: <ErrorElement />,
           },
         ],
       },

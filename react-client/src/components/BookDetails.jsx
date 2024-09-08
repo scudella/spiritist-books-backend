@@ -1,18 +1,26 @@
-import { FaLocationArrow, FaCalendarAlt, FaSearch } from 'react-icons/fa';
+import { FaLocationArrow, FaCalendarAlt } from 'react-icons/fa';
 import { IoStarOutline, IoCheckmarkOutline } from 'react-icons/io5';
 import { Link, Form } from 'react-router-dom';
 import styled from 'styled-components';
 import BookInfo from './BookInfo';
 import { useTranslation } from 'react-i18next';
-import { DeleteBook } from '../pages';
+import VerticalScrollMenu from './VerticalScrollMenu';
+import { BookThumbnail } from '.';
 
-const Book = ({
+const BookDetails = ({
   index,
   title,
   authors,
   spiritualAuthors,
+  originalPublisher,
   currentPublisher,
   publishedYear,
+  copyright,
+  yearPsychography,
+  isbn10,
+  isbn13,
+  originalCover,
+  currentCover,
   user,
 }) => {
   const { t } = useTranslation('book');
@@ -20,37 +28,66 @@ const Book = ({
   return (
     <Wrapper>
       <header>
-        <div className='link-container'>
-          <div className='main-icon'>{authors[0].charAt(0)}</div>
-          <Link to={`single-book/${index}/`} className='search-link'>
-            <FaSearch />
-          </Link>
-        </div>
-        <div></div>
-        <div className='info'>
+        <div className='main-icon box1'>{authors[0].charAt(0)}</div>
+        <div className='info box2'>
           <h5>{title}</h5>
           <p>{authors.toString()}</p>
         </div>
+        <div className='box3'>
+          {spiritualAuthors.length === 1 ? (
+            <VerticalScrollMenu
+              items={spiritualAuthors}
+              title={t('Autor(a) Espiritual')}
+              icon={<IoStarOutline />}
+            />
+          ) : (
+            <VerticalScrollMenu
+              items={spiritualAuthors}
+              title={t('Autores Espirituais')}
+              icon={<IoStarOutline />}
+            />
+          )}
+        </div>
+        <div className='boxPlaceHolder'></div>
+        <div className='box4'>
+          {originalCover && <BookThumbnail src={originalCover} />}
+          {currentCover && <BookThumbnail src={currentCover} />}
+        </div>
       </header>
+
       <div className='content'>
         <div className='content-center'>
-          <BookInfo icon={<FaLocationArrow />} text={currentPublisher} />
-          <BookInfo icon={<FaCalendarAlt />} text={publishedYear} />
           <BookInfo
-            icon={<IoCheckmarkOutline />}
-            text={
-              spiritualAuthors.length === 1
-                ? t('Autor(a) Espiritual')
-                : t('Autores Espirituais')
-            }
+            icon={<FaLocationArrow />}
+            text={`${t('editora atual')} : ${currentPublisher}`}
           />
           <BookInfo
-            icon={<IoStarOutline />}
-            text={
-              spiritualAuthors.length === 1
-                ? spiritualAuthors
-                : t('Espíritos Diversos')
-            }
+            icon={<FaLocationArrow />}
+            text={`${t('editora original')} : ${originalPublisher}`}
+          />
+          <BookInfo
+            icon={<FaCalendarAlt />}
+            text={`${t('ano da publicação')} : ${publishedYear}`}
+          />
+          <BookInfo
+            icon={<FaCalendarAlt />}
+            text={`${
+              yearPsychography.length !== 1
+                ? t('ano(s) da psicografia')
+                : t('ano da psicografia')
+            } : ${yearPsychography.join(' / ')}`}
+          />
+          <BookInfo
+            icon={<FaCalendarAlt />}
+            text={`Copyright : ${copyright ? copyright : publishedYear}`}
+          />
+          <BookInfo
+            icon={<IoCheckmarkOutline />}
+            text={`ISBN-10 : ${isbn10.join(` / `)}`}
+          />
+          <BookInfo
+            icon={<IoCheckmarkOutline />}
+            text={`ISBN-13 : ${isbn13.join(' / ')}`}
           />
         </div>
         {user.role === 'admin' && (
@@ -69,50 +106,58 @@ const Book = ({
     </Wrapper>
   );
 };
-export default Book;
+export default BookDetails;
 
 const Wrapper = styled.article`
   background: var(--background-secondary-color);
   border-radius: var(--border-radius);
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto;
   box-shadow: var(--shadow-2);
+  max-width: 880px;
+
   header {
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--text-color);
     display: grid;
-    grid-template-columns: 0.5fr 0.1fr 2fr;
-    align-items: center;
+    grid-template-columns: 0.25fr 0.75fr 1fr;
+    align-items: flex-start;
     justify-content: space-between;
   }
-  .link-container {
-    position: relative;
-    height: 60px;
-    width: 60px;
-    z-index: 1;
+  .box1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
   }
-  .search-link {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--primary-800);
-    display: flex;
+  .box2 {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+  .box3 {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 3;
+  }
+  .box4 {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    transition: var(--transition);
-    opacity: 0;
-    cursor: pointer;
-    font-size: 1.25rem;
-    color: var(--white);
-    z-index: 1;
   }
-  header:hover .search-link {
-    opacity: 1;
+  .boxPlaceHolder {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
   }
+
   .main-icon {
     width: 60px;
     height: 60px;

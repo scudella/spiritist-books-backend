@@ -1,4 +1,3 @@
-import React from 'react';
 import { MdQueryStats, MdAdminPanelSettings } from 'react-icons/md';
 import { FaWpforms } from 'react-icons/fa';
 import { ImProfile } from 'react-icons/im';

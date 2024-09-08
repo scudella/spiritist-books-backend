@@ -8,7 +8,8 @@ const {
   checkPermissions,
   sendVerificationEmail,
 } = require('../utils');
-const books = require('spiritist-books');
+const spiritistBooksModule = require('spiritist-books/dist/index.cjs');
+const books = spiritistBooksModule.default;
 const cloudinary = require('cloudinary').v2;
 const crypto = require('crypto');
 const { formatImage } = require('../middleware/multer');

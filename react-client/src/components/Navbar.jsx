@@ -4,8 +4,10 @@ import Logo from './Logo';
 import { useDashboardContext } from '../pages/DashboardLayout';
 import LogoutContainer from './LogoutContainer';
 import ThemeToggle from './ThemeToggle';
+import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
+  const { t } = useTranslation('book');
   const { toggleSidebar } = useDashboardContext();
 
   return (
@@ -16,7 +18,7 @@ const Navbar = () => {
         </button>
         <div>
           <Logo />
-          <h4 className='logo-text'>dashboard</h4>
+          <h4 className='logo-text'>{t('Livro Espírita')}</h4>
         </div>
         <div className='btn-container'>
           <ThemeToggle />
