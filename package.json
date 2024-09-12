@@ -1,6 +1,6 @@
 {
   "name": "spiritist-books-backend",
-  "version": "2.42.0",
+  "version": "2.42.1",
   "description": "Spiritist Books backend",
   "main": "server.js",
   "scripts": {
