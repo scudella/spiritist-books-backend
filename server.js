@@ -2,14 +2,6 @@ require('dotenv').config();
 const path = require('path');
 const { readFileSync } = require('fs');
 
-// protocols
-const https = require('https');
-
-const credentials = {
-  pfx: readFileSync('/etc/scudella/scudella.pfx'),
-  passphrase: readFileSync('/etc/scudella/passphrase'),
-};
-
 require('express-async-errors');
 // express
 const express = require('express');
@@ -85,7 +77,11 @@ app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(mongoSanitize());
 
-app.use(express.static('./public'));
+app.use(express.static(path.resolve(__dirname, './react-client/dist')));
+app.use(
+  '/user',
+  express.static(path.resolve(__dirname, './react-client/dist'))
+);
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
@@ -93,22 +89,17 @@ app.use('/api/v1/books', bookRouter);
 
 // Send front-end files directly from client/dist
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './-react-client/dist', 'index.html'));
+  res.sendFile(path.resolve(__dirname, './react-client/dist', 'index.html'));
 });
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-const httpsServer = https.createServer(credentials, app);
-
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URL);
-    httpsServer.listen(
-      port,
-      console.log(`Server is listening on port ${port}...`)
-    );
+    app.listen(port, console.log(`Server is listening on port ${port}...`));
   } catch (error) {
     console.log(error);
   }
