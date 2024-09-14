@@ -51,7 +51,9 @@ const BookDetails = ({
         <div className='boxPlaceHolder'></div>
         <div className='box4'>
           {originalCover && <BookThumbnail src={originalCover} />}
-          {currentCover && <BookThumbnail src={currentCover} />}
+          <div className='box5'>
+            {currentCover && <BookThumbnail src={currentCover} />}
+          </div>
         </div>
       </header>
 
@@ -112,50 +114,103 @@ const Wrapper = styled.article`
   background: var(--background-secondary-color);
   border-radius: var(--border-radius);
   display: grid;
-  grid-template-rows: auto;
   box-shadow: var(--shadow-2);
-  max-width: 880px;
+  max-width: 350px;
+  @media (min-width: 800px) {
+    max-width: 880px;
+  }
 
   header {
-    padding: 1rem 1.5rem;
+    padding: 1rem 1rem;
     border-bottom: 1px solid var(--text-color);
     display: grid;
-    grid-template-columns: 0.25fr 0.75fr 1fr;
-    align-items: flex-start;
-    justify-content: space-between;
+    grid-template-columns: 0.25fr 1.75fr;
+    gap: 2rem;
+    grid-column-gap: 1.2rem;
   }
+
   .box1 {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 1;
-    grid-row-end: 2;
+    position: absolute;
+    left: -999em;
   }
   .box2 {
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 2;
+    margin-top: 1rem;
   }
   .box3 {
-    grid-column-start: 3;
-    grid-column-end: 4;
-    grid-row-start: 1;
-    grid-row-end: 3;
-  }
-  .box4 {
-    grid-column-start: 2;
+    grid-column-start: 1;
     grid-column-end: 3;
     grid-row-start: 2;
-    grid-row-end: 3;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    align-items: center;
+    justify-self: center;
   }
-  .boxPlaceHolder {
+  .box4 {
     grid-column-start: 1;
     grid-column-end: 2;
-    grid-row-start: 2;
-    grid-row-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    width: 3.5rem;
+    margin-top: 0.5rem;
+  }
+  .box5 {
+    visibility: collapse;
+  }
+  .boxPlaceHolder {
+    visibility: collapse;
+  }
+
+  @media (min-width: 800px) {
+    header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--text-color);
+      display: grid;
+      grid-template-columns: 0.25fr 0.75fr 1fr;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .box1 {
+      position: relative;
+      left: 0em;
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 1;
+      grid-row-end: 2;
+    }
+    .box2 {
+      grid-column-start: 2;
+      grid-column-end: 3;
+      grid-row-start: 1;
+      grid-row-end: 2;
+    }
+    .box3 {
+      grid-column-start: 3;
+      grid-column-end: 4;
+      grid-row-start: 1;
+      grid-row-end: 3;
+    }
+    .box4 {
+      grid-column-start: 2;
+      grid-column-end: 3;
+      grid-row-start: 2;
+      grid-row-end: 3;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center;
+      width: 15rem;
+    }
+    .boxPlaceHolder {
+      visibility: visible;
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 2;
+      grid-row-end: 3;
+    }
+    .box5 {
+      visibility: visible;
+    }
   }
 
   .main-icon {
@@ -192,8 +247,10 @@ const Wrapper = styled.article`
     grid-template-columns: 1fr;
     row-gap: 1.5rem;
     align-items: center;
+    font-size: 0.8rem;
     @media (min-width: 576px) {
       grid-template-columns: 1fr 1fr;
+      font-size: 1rem;
     }
   }
   .status {
