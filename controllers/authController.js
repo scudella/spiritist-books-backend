@@ -1,36 +1,54 @@
-require('dotenv').config();
-const User = require('../models/User');
-const Token = require('../models/Token');
-const { StatusCodes } = require('http-status-codes');
-const CustomError = require('../errors');
-const {
+import * as dotenv from 'dotenv';
+import User from '../models/User.js';
+import Token from '../models/Token.js';
+import { StatusCodes } from 'http-status-codes';
+import * as CustomError from '../errors/index.js';
+import {
   attachCookiesToResponse,
   createTokenUser,
   sendVerificationEmail,
   sendResetPasswordEmail,
   createHash,
   verifyGoogleJWT,
-  defaultPasswordConfig,
-} = require('../utils');
-const crypto = require('crypto');
-const strongPasswordGenerator = require('strong-password-generator');
-const { avatar } = require('../utils/avatar');
+  sanitizeName,
+  sanitizeEmail,
+  logComment,
+} from '../utils/index.js';
+import crypto from 'crypto';
+import generatePassword from 'omgopass';
+import { avatar } from '../utils/avatar.js';
+
+dotenv.config();
 
 const register = async (req, res) => {
   const { name, email, password, lastName } = req.body;
+
+  if (!sanitizeName(name)) {
+    throw new CustomError.BadRequestError('Name contains special characters');
+  }
+
+  if (!sanitizeEmail(email)) {
+    throw new CustomError.BadRequestError('Email malformed');
+  }
+
   const emailAlreadyExists = await User.findOne({ email });
+
   if (emailAlreadyExists) {
     throw new CustomError.BadRequestError('Email already exists');
   }
 
-  // first registered user is an admin
-  const isFirstAccount = (await User.countDocuments({})) === 0;
-  const role = isFirstAccount ? 'admin' : 'user';
+  if (password.length < 8) {
+    throw new CustomError.BadRequestError(
+      'Password length is 8 or more characters'
+    );
+  }
+
+  const role = 'user';
 
   const verificationToken = crypto.randomBytes(40).toString('hex');
 
   // Select a random avatar;
-  picture = avatar[Math.floor(Math.random() * avatar.length)];
+  const picture = avatar[Math.floor(Math.random() * avatar.length)];
 
   const user = await User.create({
     name,
@@ -42,14 +60,20 @@ const register = async (req, res) => {
     picture,
   });
 
-  const origin = process.env.CLIENT_ORIGIN;
+  const origin = process.env.CLIENT_ORIGIN ?? 'http://localhost:5000';
 
-  await sendVerificationEmail({
-    name: `${user.name} ${user.lastName}`,
-    email: user.email,
-    verificationToken: user.verificationToken,
-    origin,
-  });
+  try {
+    await sendVerificationEmail({
+      name: `${user.name} ${user.lastName}`,
+      email: user.email,
+      verificationToken: user.verificationToken,
+      origin,
+    });
+  } catch (error) {
+    logComment('Could not send the verification email for user registering.');
+    await User.deleteOne(user._id);
+    throw new Error('Server could not send the email.');
+  }
 
   res.status(StatusCodes.CREATED).json({
     msg: 'Success! Please check your email to verify account',
@@ -86,7 +110,7 @@ const login = async (req, res) => {
             'Please provide valid gmail credentials'
           );
         }
-        const password = strongPasswordGenerator.generatePassword();
+        const password = generatePassword();
         user = await User.create({
           name,
           lastName,
@@ -170,7 +194,7 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  await Token.findOneAndDelete({ user: req.user.userId });
+  await Token.findOneAndDelete({ user: req.user?.userId });
   res.cookie('accessToken', 'random string', {
     httpOnly: true,
     expires: new Date(Date.now()),
@@ -203,7 +227,6 @@ const verifyEmail = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'Email verified' });
 };
 
-// It is possible to someone reset the password without verifying the account first
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   if (!email) {
@@ -211,10 +234,10 @@ const forgotPassword = async (req, res) => {
   }
 
   const user = await User.findOne({ email });
-  if (user) {
+  if (user && user.isVerified) {
     const passwordToken = crypto.randomBytes(70).toString('hex');
     // send email
-    const origin = process.env.CLIENT_ORIGIN;
+    const origin = process.env.CLIENT_ORIGIN ?? 'http://localhost:3000';
     await sendResetPasswordEmail({
       name: user.name,
       email: user.email,
@@ -231,10 +254,12 @@ const forgotPassword = async (req, res) => {
       { passwordToken: passwordTokenHashed, passwordTokenExpirationDate },
       { new: true, runValidators: true }
     );
+    res
+      .status(StatusCodes.OK)
+      .json({ msg: 'Please check your email for reset password link' });
+  } else {
+    throw new CustomError.UnauthenticatedError('Please, verify your email');
   }
-  res
-    .status(StatusCodes.OK)
-    .json({ msg: 'Please check your email for reset password link' });
 };
 
 const resetPassword = async (req, res) => {
@@ -247,6 +272,7 @@ const resetPassword = async (req, res) => {
     const currentDate = new Date();
     if (
       user.passwordToken === createHash(token) &&
+      user.passwordTokenExpirationDate &&
       user.passwordTokenExpirationDate > currentDate
     ) {
       user.password = password;
@@ -258,17 +284,17 @@ const resetPassword = async (req, res) => {
   res.send('reset password');
 };
 
-const showWebId = (req, res) => {
+const showWebId = (_, res) => {
   const clientId = process.env.GOOGLE_WEB_CLIENT_ID;
   res.status(StatusCodes.OK).json({ clientId });
 };
 
-const showAndroidId = (req, res) => {
+const showAndroidId = (_, res) => {
   const clientId = process.env.GOOGLE_ANDROID_CLIENT_ID;
   res.status(StatusCodes.OK).json({ clientId });
 };
 
-module.exports = {
+export {
   register,
   login,
   logout,

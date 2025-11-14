@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+import { sanitizeEmail } from '../utils/sanitizeString.js';
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     required: [true, 'Please provide email'],
     validate: {
-      validator: validator.isEmail,
+      validator: sanitizeEmail,
       message: 'Please provide valid email',
     },
     maxlength: 30,
@@ -71,4 +71,4 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
   return isMatch;
 };
 
-module.exports = mongoose.model('User', UserSchema);
+export default mongoose.model('User', UserSchema);

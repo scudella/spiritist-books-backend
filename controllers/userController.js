@@ -1,20 +1,22 @@
-const User = require('../models/User');
-const Token = require('../models/Token');
-const { StatusCodes } = require('http-status-codes');
-const CustomError = require('../errors');
-const {
+import User from '../models/User.js';
+import { StatusCodes } from 'http-status-codes';
+import * as CustomError from '../errors/index.js';
+import {
   createTokenUser,
   attachCookiesToResponse,
   checkPermissions,
   sendVerificationEmail,
-} = require('../utils');
-const spiritistBooksModule = require('spiritist-books/dist/index.cjs');
-const books = spiritistBooksModule.default;
-const cloudinary = require('cloudinary').v2;
-const crypto = require('crypto');
-const { formatImage } = require('../middleware/multer');
+} from '../utils/index.js';
+import * as cly from 'cloudinary';
+import crypto from 'crypto';
+import { formatImage } from '../middleware/multer.js';
+import spiritistBooksModule from 'spiritist-books/dist/index.cjs';
 
-const getAllUsers = async (req, res) => {
+const books = spiritistBooksModule.default;
+
+const cloudinary = cly.v2;
+
+const getAllUsers = async (_, res) => {
   const users = await User.find({ role: 'user' }).select('-password');
   res.status(StatusCodes.OK).json({ users });
 };
@@ -26,7 +28,7 @@ const getSingleUser = async (req, res) => {
   if (!user) {
     throw new CustomError.NotFoundError(`No user with id : ${id}`);
   }
-  checkPermissions(req.user, user._id);
+  checkPermissions(req.user, user._id.toHexString());
   res.status(StatusCodes.OK).json({ user });
 };
 
@@ -45,7 +47,7 @@ const updateUser = async (req, res) => {
   // Check whether the user is trying to update to an email
   // that already is taken by someone else
   const userEmailOwner = await User.findOne({ email });
-  if (userEmailOwner && userEmailOwner._id.toString() !== req.user.userId) {
+  if (userEmailOwner && userEmailOwner._id.toHexString() !== req.user.userId) {
     throw new CustomError.BadRequestError('email already exists');
   } else if (currentEmail !== email) {
     newUser.verificationToken = crypto.randomBytes(40).toString('hex');
@@ -132,12 +134,22 @@ const updateUserPassword = async (req, res) => {
 };
 
 const getApplicationStats = async (req, res) => {
-  const users = await User.countDocuments();
-  const bookCount = books.all.length;
-  res.status(StatusCodes.OK).json({ users, bookCount });
+  try {
+    if (!books || !books.all) {
+      console.error(
+        "Books object or its 'all' property is missing or undefined."
+      );
+      throw new Error('Invalid books structure.');
+    }
+    const users = await User.countDocuments();
+    const bookCount = books.all.length;
+    res.status(StatusCodes.OK).json({ users, bookCount });
+  } catch (error) {
+    console.error('Error in getApplicationStats:', error);
+  }
 };
 
-module.exports = {
+export {
   getAllUsers,
   getSingleUser,
   showCurrentUser,

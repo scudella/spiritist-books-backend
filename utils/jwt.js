@@ -1,6 +1,15 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
+import * as dotenv from 'dotenv';
+import * as CustomError from '../errors/index.js';
+
+dotenv.config();
 
 const createJWT = ({ payload }) => {
+  if (!process.env.JWT_SECRET) {
+    throw new CustomError.CustomAPIError(
+      'Internal server error. No jwt secret.'
+    );
+  }
   const token = jwt.sign(payload, process.env.JWT_SECRET);
   return token;
 };
@@ -25,6 +34,14 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
   });
 };
 
-const isTokenValid = (token) => jwt.verify(token, process.env.JWT_SECRET);
+const isTokenValid = (token) => {
+  if (!process.env.JWT_SECRET) {
+    throw new CustomError.CustomAPIError(
+      'Internal server error. No jwt secret.'
+    );
+  }
 
-module.exports = { createJWT, isTokenValid, attachCookiesToResponse };
+  return jwt.verify(token, process.env.JWT_SECRET);
+};
+
+export { createJWT, isTokenValid, attachCookiesToResponse };

@@ -1,6 +1,6 @@
-const multer = require('multer');
-const DataParser = require('datauri/parser');
-const path = require('path');
+import multer from 'multer';
+import DataParser from 'datauri/parser.js';
+import path from 'path';
 
 const storage = multer.memoryStorage({});
 
@@ -13,4 +13,4 @@ const formatImage = (file) => {
   return parser.format(fileExtension, file.buffer).content;
 };
 
-module.exports = { upload, formatImage };
+export { upload, formatImage };

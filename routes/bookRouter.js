@@ -1,16 +1,17 @@
-const express = require('express');
-const router = express.Router();
-const {
+import express from 'express';
+import {
   getBooks,
   getSingleBook,
   addBook,
   editBook,
   deleteBook,
-} = require('../controllers/BookController.js');
-const {
+} from '../controllers/BookController.js';
+import {
   authenticateUser,
   authorizePermissions,
-} = require('../middleware/authentication');
+} from '../middleware/authentication.js';
+
+const router = express.Router();
 
 router
   .route('/')
@@ -23,4 +24,4 @@ router
   .patch(authenticateUser, authorizePermissions('admin'), editBook)
   .delete(authenticateUser, authorizePermissions('admin'), deleteBook);
 
-module.exports = router;
+export default router;

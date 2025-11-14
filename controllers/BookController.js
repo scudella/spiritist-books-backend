@@ -1,13 +1,16 @@
-const spiritistBooksModule = require('spiritist-books/dist/index.cjs');
-const books = spiritistBooksModule.default;
-const { StatusCodes } = require('http-status-codes');
-const CustomError = require('../errors');
-const {
+import { StatusCodes } from 'http-status-codes';
+import * as CustomError from '../errors/index.js';
+import {
   filterBooksByString,
   filterBooksByStringNumber,
   filterBooksByArray,
   sortBooks,
-} = require('../utils');
+} from '../utils/index.js';
+
+import spiritistBooksModule from 'spiritist-books/dist/index.cjs';
+
+const books = spiritistBooksModule.default;
+
 const BOOKSPERPAGE = 10;
 
 const getBooks = async (req, res) => {
@@ -116,4 +119,4 @@ const deleteBook = async (req, res) => {
   res.status(StatusCodes.OK).json();
 };
 
-module.exports = { getBooks, getSingleBook, addBook, editBook, deleteBook };
+export { getBooks, getSingleBook, addBook, editBook, deleteBook };

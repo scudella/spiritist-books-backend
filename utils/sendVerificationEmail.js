@@ -1,4 +1,4 @@
-const sendEmail = require('./sendEmail');
+import sendEmail from './sendEmail.js';
 
 const sendVerificationEmail = async ({
   name,
@@ -10,7 +10,7 @@ const sendVerificationEmail = async ({
 
   const message = `<p>Please confirm your email by clicking in the following link : <a href="${verifyEmail}">Verify Email</a></p>`;
 
-  return sendEmail({
+  return await sendEmail({
     to: email,
     subject: 'Email confirmation',
     html: `<h4> Hello ${name},</h4>
@@ -19,4 +19,4 @@ const sendVerificationEmail = async ({
   });
 };
 
-module.exports = sendVerificationEmail;
+export default sendVerificationEmail;
