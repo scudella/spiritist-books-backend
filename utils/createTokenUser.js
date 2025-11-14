@@ -9,4 +9,4 @@ const createTokenUser = (user) => {
   };
 };
 
-module.exports = createTokenUser;
+export default createTokenUser;

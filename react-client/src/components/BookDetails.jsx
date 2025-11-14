@@ -97,7 +97,7 @@ const BookDetails = ({
             <Link to={`/dashboard/edit-book/${index}`} className='btn edit-btn'>
               {t('Editar')}
             </Link>
-            <Form method='post' action={`delete-book/${index}`}>
+            <Form method='post' action={`/dashboard/delete-book/${index}`}>
               <button type='submit' className='btn delete-btn'>
                 {t('Remover')}
               </button>

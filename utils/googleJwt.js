@@ -1,5 +1,7 @@
-require('dotenv').config();
-const { OAuth2Client } = require('google-auth-library');
+import * as dotenv from 'dotenv';
+import { OAuth2Client } from 'google-auth-library';
+
+dotenv.config();
 
 const client = new OAuth2Client();
 
@@ -21,4 +23,4 @@ async function verifyGoogleJWT(token) {
   }
 }
 
-module.exports = { verifyGoogleJWT };
+export { verifyGoogleJWT };

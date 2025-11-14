@@ -1,21 +1,21 @@
-const { createJWT, isTokenValid, attachCookiesToResponse } = require('./jwt');
-const { verifyGoogleJWT } = require('./googleJwt');
-const createTokenUser = require('./createTokenUser');
-const checkPermissions = require('./checkPermissions');
-const sendVerificationEmail = require('./sendVerificationEmail');
-const sendResetPasswordEmail = require('./sendResetPasswordEmail');
-const createHash = require('./createHash');
-const { logError, logComment } = require('./logs');
-const { defaultPasswordConfig } = require('./strongPassword');
-const { avatar } = require('./avatar');
-const {
+import { createJWT, isTokenValid, attachCookiesToResponse } from './jwt.js';
+import { verifyGoogleJWT } from './googleJwt.js';
+import createTokenUser from './createTokenUser.js';
+import checkPermissions from './checkPermissions.js';
+import sendVerificationEmail from './sendVerificationEmail.js';
+import sendResetPasswordEmail from './sendResetPasswordEmail.js';
+import createHash from './createHash.js';
+import { logError, logComment } from './logs.js';
+import { avatar } from './avatar.js';
+import {
   filterBooksByString,
   filterBooksByStringNumber,
   filterBooksByArray,
   sortBooks,
-} = require('./filterBooks');
+} from './filterBooks.js';
+import { sanitizeName, sanitizeEmail } from './sanitizeString.js';
 
-module.exports = {
+export {
   createJWT,
   isTokenValid,
   verifyGoogleJWT,
@@ -31,6 +31,7 @@ module.exports = {
   filterBooksByStringNumber,
   filterBooksByArray,
   sortBooks,
-  defaultPasswordConfig,
   avatar,
+  sanitizeEmail,
+  sanitizeName,
 };

@@ -5,4 +5,4 @@ const BOOK_SORT_BY = {
   DESCENDING: 'z-a',
 };
 
-module.exports = { BOOK_SORT_BY };
+export { BOOK_SORT_BY };

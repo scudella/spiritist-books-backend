@@ -1,4 +1,4 @@
-const filterBooksByString = (books, property, bookString) => {
+export const filterBooksByString = (books, property, bookString) => {
   const filteredBooks = books.filter((book) => {
     if (book[property]?.toLowerCase().includes(bookString.toLowerCase())) {
       return book;
@@ -7,7 +7,7 @@ const filterBooksByString = (books, property, bookString) => {
   return filteredBooks;
 };
 
-const filterBooksByStringNumber = (books, property, bookString) => {
+export const filterBooksByStringNumber = (books, property, bookString) => {
   const filteredBooks = books.filter((book) => {
     if (book[property]?.toString().includes(bookString)) {
       return book;
@@ -16,7 +16,7 @@ const filterBooksByStringNumber = (books, property, bookString) => {
   return filteredBooks;
 };
 
-const filterBooksByArray = (books, property, bookString) => {
+export const filterBooksByArray = (books, property, bookString) => {
   const filteredBooks = books.filter((book) => {
     if (
       book[property]?.find((item) =>
@@ -29,7 +29,7 @@ const filterBooksByArray = (books, property, bookString) => {
   return filteredBooks;
 };
 
-function sortBooks(books, sort) {
+export function sortBooks(books, sort) {
   return books.sort((a, b) => {
     switch (sort) {
       case 'newest':
@@ -65,10 +65,3 @@ function sortBooks(books, sort) {
     }
   });
 }
-
-module.exports = {
-  filterBooksByString,
-  filterBooksByStringNumber,
-  filterBooksByArray,
-  sortBooks,
-};

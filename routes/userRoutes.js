@@ -1,21 +1,20 @@
-const express = require('express');
-const router = express.Router();
-const {
+import express from 'express';
+import { upload } from '../middleware/multer.js';
+import {
   authenticateUser,
   authorizePermissions,
   checkForTestUser,
-} = require('../middleware/authentication');
-
-const {
+} from '../middleware/authentication.js';
+import {
   getAllUsers,
   getSingleUser,
   showCurrentUser,
   updateUser,
   updateUserPassword,
   getApplicationStats,
-} = require('../controllers/userController');
+} from '../controllers/userController.js';
 
-const { upload } = require('../middleware/multer');
+const router = express.Router();
 
 router
   .route('/')
@@ -35,4 +34,4 @@ router
   .get(authenticateUser, authorizePermissions('admin'), getApplicationStats);
 router.route('/:id').get(authenticateUser, getSingleUser); // needs to come last
 
-module.exports = router;
+export default router;

@@ -1,10 +1,10 @@
-const express = require('express');
+import express from 'express';
+import { authenticateUser } from '../middleware/authentication.js';
+import { rateLimit } from 'express-rate-limit';
+
 const router = express.Router();
 
-const { authenticateUser } = require('../middleware/authentication');
-const rateLimiter = require('express-rate-limit');
-
-const {
+import {
   register,
   login,
   logout,
@@ -13,9 +13,9 @@ const {
   resetPassword,
   showWebId,
   showAndroidId,
-} = require('../controllers/authController');
+} from '../controllers/authController.js';
 
-const apiLimiter = rateLimiter({
+const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 15, // Limit each IP to 15 requests per `window` (here, per 15 minutes)
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
@@ -32,4 +32,4 @@ router.route('/reset-password').post(resetPassword);
 router.route('/show-web-id').get(showWebId);
 router.route('/show-android-id').get(showAndroidId);
 
-module.exports = router;
+export default router;
