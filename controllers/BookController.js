@@ -25,7 +25,7 @@ const getBooks = async (req, res) => {
     sort,
   } = req.query;
 
-  let booksMatched = books.all;
+  let booksMatched = [...books.all];
 
   if (
     title ||
@@ -42,21 +42,21 @@ const getBooks = async (req, res) => {
       booksMatched = filterBooksByString(
         booksMatched,
         'originalPublisher',
-        originalPublisher
+        originalPublisher,
       );
     }
     if (currentPublisher) {
       booksMatched = filterBooksByString(
         booksMatched,
         'currentPublisher',
-        currentPublisher
+        currentPublisher,
       );
     }
     if (publishedYear) {
       booksMatched = filterBooksByStringNumber(
         booksMatched,
         'publishedYear',
-        publishedYear
+        publishedYear,
       );
     }
     if (authors) {
@@ -66,7 +66,7 @@ const getBooks = async (req, res) => {
       booksMatched = filterBooksByArray(
         booksMatched,
         'spiritualAuthors',
-        spiritualAuthors
+        spiritualAuthors,
       );
     }
   }
@@ -85,7 +85,7 @@ const getBooks = async (req, res) => {
 
   booksMatched = booksMatched.slice(
     BOOKSPERPAGE * (page - 1),
-    page * BOOKSPERPAGE
+    page * BOOKSPERPAGE,
   );
 
   res

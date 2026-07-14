@@ -4,9 +4,8 @@ import { Form, useSubmit } from 'react-router-dom';
 import { BOOK_SORT_BY } from '../utils/constants';
 import { useAllBooksContext } from '../pages/AllBooks';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
 
-const SearchContainer = ({ reset }) => {
+const SearchContainer = () => {
   const { t } = useTranslation('addBook');
   const { searchValues } = useAllBooksContext();
   if (searchValues) {
@@ -33,22 +32,13 @@ const SearchContainer = ({ reset }) => {
     };
   };
 
-  useEffect(() => {
-    // Clean up the URL for the reset param
-    if (reset) {
-      const formData = new FormData();
-      submit(formData);
-    }
-  }, [reset]);
-
   const initValues = () => {
     // Clean up the input fields
     Array.from(document.querySelectorAll('input')).forEach(
-      (input) => (input.value = '')
+      (input) => (input.value = ''),
     );
     // Clean up the select field
-    Array.from(document.querySelectorAll('select'))[0].value =
-      t('mais recente');
+    Array.from(document.querySelectorAll('select'))[0].value = t('index');
 
     // Message AllBooks page to reset the machine state
     const formData = new FormData();
@@ -119,7 +109,10 @@ const SearchContainer = ({ reset }) => {
             name='sort'
             defaultValue={sort}
             labelText={t('ordenar')}
-            list={[...Object.values(BOOK_SORT_BY).map((item) => t(item))]}
+            list={Object.values(BOOK_SORT_BY).map((value) => ({
+              value,
+              label: t(value),
+            }))}
             onChange={(e) => {
               submit(e.currentTarget.form);
             }}

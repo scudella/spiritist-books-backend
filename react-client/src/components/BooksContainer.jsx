@@ -12,7 +12,7 @@ const BooksContainer = ({ user }) => {
   if (books.length === 0) {
     return (
       <Wrapper>
-        <h2>{t('Não há livros para mostrar...')}</h2>
+        <h2>{t('Não há livros para mostrar') + '...'}</h2>
       </Wrapper>
     );
   }

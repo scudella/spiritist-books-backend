@@ -20,7 +20,7 @@ export const filterBooksByArray = (books, property, bookString) => {
   const filteredBooks = books.filter((book) => {
     if (
       book[property]?.find((item) =>
-        item.toLowerCase().includes(bookString.toLowerCase())
+        item.toLowerCase().includes(bookString.toLowerCase()),
       )
     ) {
       return book;
@@ -30,6 +30,7 @@ export const filterBooksByArray = (books, property, bookString) => {
 };
 
 export function sortBooks(books, sort) {
+  if (sort === 'index') return books;
   return books.sort((a, b) => {
     switch (sort) {
       case 'newest':

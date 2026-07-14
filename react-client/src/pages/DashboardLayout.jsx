@@ -46,7 +46,7 @@ const DashboardLayout = ({ isDarkThemeEnabled }) => {
   const logoutUser = async () => {
     navigate('/');
     await customFetch.delete('/auth/logout');
-    toast.success(t('Saindo...'));
+    toast.success(t('Saindo') + '...');
   };
 
   return (

@@ -7,7 +7,7 @@
   "admin": "admin",
   "Internal Server Error": "Internal Server Error",
   "No server response": "No server response",
-  "enviando...": "submitting...",
+  "enviando": "submitting",
   "enviar": "submit",
-  "Ocorreu um erro...": "There was an error..."
+  "Ocorreu um erro": "There was an error"
 }

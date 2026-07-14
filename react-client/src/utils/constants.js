@@ -1,6 +1,7 @@
 export const BOOK_SORT_BY = {
-  NEWEST_FIRST: 'mais recente',
-  OLDEST_FIRST: 'mais antigo',
+  INDEX: 'index',
+  NEWEST_FIRST: 'newest',
+  OLDEST_FIRST: 'oldest',
   ASCENDING: 'a-z',
   DESCENDING: 'z-a',
 };

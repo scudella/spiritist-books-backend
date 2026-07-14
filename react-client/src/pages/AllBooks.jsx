@@ -10,24 +10,9 @@ export const loader = async ({ request }) => {
     ...new URL(request.url).searchParams.entries(),
   ]);
 
-  let reset = false;
-
-  // upon clicking the clean up button, clean the machine state
-  if (params.reset) {
-    params = {};
-    // ask the searchContainer to finish the reset cleaning up the url
-    reset = true;
-  }
-
-  if (params?.sort === 'mais recente') {
-    params.sort = 'newest';
-  } else if (params?.sort === 'mais antigo') {
-    params.sort = 'oldest';
-  }
-
   try {
     const { data } = await customFetch.get('/books', { params });
-    return { result: 'success', reset, data, searchValues: { ...params } };
+    return { result: 'success', data, searchValues: params };
   } catch (error) {
     const message = axiosError(error);
     return {
