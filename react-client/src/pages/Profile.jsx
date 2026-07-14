@@ -52,7 +52,7 @@ const Profile = () => {
         <div className='form-center'>
           <div className='form-row'>
             <label htmlFor='avatar' className='form-label'>
-              {t('Selecione um arquivo de imagem (máx. 0.5 MB)')}
+              {t('Selecione um arquivo de imagem (máx 0,5 MB)')}
             </label>
             <input
               type='file'
@@ -85,7 +85,7 @@ const Profile = () => {
             className='btn btn-block form-btn'
             disabled={isSubmitting}
           >
-            {isSubmitting ? t('enviando...') : t('enviar')}
+            {isSubmitting ? t('enviando') + '...' : t('enviar')}
           </button>
         </div>
       </Form>

@@ -13,5 +13,13 @@ const Wrapper = styled.div`
   .thumb {
     max-width: 100%;
     width: 4.5rem;
+    height: 4rem;
+    padding-right: 0.5rem;
+  }
+  @media (min-width: 800px) {
+    .thumb {
+      height: 6rem;
+      max-height: 6rem;
+    }
   }
 `;

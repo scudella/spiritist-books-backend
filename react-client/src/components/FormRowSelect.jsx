@@ -17,13 +17,11 @@ const FormRowSelect = ({
         onChange={onChange}
         defaultValue={defaultValue}
       >
-        {list.map((itemValue) => {
-          return (
-            <option key={itemValue} value={itemValue}>
-              {itemValue}
-            </option>
-          );
-        })}
+        {list.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
       </select>
     </div>
   );

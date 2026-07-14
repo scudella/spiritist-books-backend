@@ -20,6 +20,7 @@ const BookDetails = ({
   isbn10,
   isbn13,
   originalCover,
+  otherCover,
   currentCover,
   user,
 }) => {
@@ -31,7 +32,7 @@ const BookDetails = ({
         <div className='main-icon box1'>{authors[0].charAt(0)}</div>
         <div className='info box2'>
           <h5>{title}</h5>
-          <p>{authors.toString()}</p>
+          <p>{authors.join(', ')}</p>
         </div>
         <div className='box3'>
           {spiritualAuthors.length === 1 ? (
@@ -51,9 +52,16 @@ const BookDetails = ({
         <div className='boxPlaceHolder'></div>
         <div className='box4'>
           {originalCover && <BookThumbnail src={originalCover} />}
-          <div className='box5'>
-            {currentCover && <BookThumbnail src={currentCover} />}
-          </div>
+          {otherCover && (
+            <div className='box5'>
+              <BookThumbnail src={otherCover} />
+            </div>
+          )}
+          {currentCover && (
+            <div className='box5'>
+              <BookThumbnail src={currentCover} />
+            </div>
+          )}
         </div>
       </header>
 
@@ -61,36 +69,49 @@ const BookDetails = ({
         <div className='content-center'>
           <BookInfo
             icon={<FaLocationArrow />}
-            text={`${t('editora atual')} : ${currentPublisher}`}
+            label={`${t('editora atual')}`}
+            text={`${currentPublisher}`}
           />
           <BookInfo
             icon={<FaLocationArrow />}
-            text={`${t('editora original')} : ${originalPublisher}`}
+            label={`${t('editora original')}`}
+            text={`${originalPublisher}`}
           />
           <BookInfo
             icon={<FaCalendarAlt />}
-            text={`${t('ano da publicação')} : ${publishedYear}`}
+            label={`${t('ano da publicação')}`}
+            text={`${publishedYear}`}
           />
+          {yearPsychography.length > 0 && (
+            <BookInfo
+              icon={<FaCalendarAlt />}
+              label={`${
+                yearPsychography.length !== 1
+                  ? t('ano(s) da psicografia')
+                  : t('ano da psicografia')
+              }`}
+              text={`${yearPsychography.join(' / ')}`}
+            />
+          )}
           <BookInfo
             icon={<FaCalendarAlt />}
-            text={`${
-              yearPsychography.length !== 1
-                ? t('ano(s) da psicografia')
-                : t('ano da psicografia')
-            } : ${yearPsychography.join(' / ')}`}
+            label={'Copyright'}
+            text={`${copyright ? copyright : publishedYear}`}
           />
-          <BookInfo
-            icon={<FaCalendarAlt />}
-            text={`Copyright : ${copyright ? copyright : publishedYear}`}
-          />
-          <BookInfo
-            icon={<IoCheckmarkOutline />}
-            text={`ISBN-10 : ${isbn10.join(` / `)}`}
-          />
-          <BookInfo
-            icon={<IoCheckmarkOutline />}
-            text={`ISBN-13 : ${isbn13.join(' / ')}`}
-          />
+          {isbn10.length > 0 && (
+            <BookInfo
+              icon={<IoCheckmarkOutline />}
+              label={'ISBN-10'}
+              text={`${isbn10.join(` / `)}`}
+            />
+          )}
+          {isbn13.length > 0 && (
+            <BookInfo
+              icon={<IoCheckmarkOutline />}
+              label={'ISBN-13'}
+              text={`${isbn13.join(' / ')}`}
+            />
+          )}
         </div>
         {user.role === 'admin' && (
           <footer className='actions'>
@@ -155,7 +176,7 @@ const Wrapper = styled.article`
     margin-top: 0.5rem;
   }
   .box5 {
-    visibility: collapse;
+    display: none;
   }
   .boxPlaceHolder {
     visibility: collapse;
@@ -209,7 +230,7 @@ const Wrapper = styled.article`
       grid-row-end: 3;
     }
     .box5 {
-      visibility: visible;
+      display: block;
     }
   }
 
@@ -230,6 +251,7 @@ const Wrapper = styled.article`
     h5 {
       margin-bottom: 0.5rem;
       text-transform: none;
+      color: var(--primary-700);
     }
     p {
       margin: 0;

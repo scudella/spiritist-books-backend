@@ -42,7 +42,7 @@ const authorizePermissions = (...roles) => {
   return (req, _, next) => {
     if (!roles.includes(req.user.role)) {
       throw new CustomError.UnauthorizedError(
-        'Unauthorized to access this route'
+        'Unauthorized to access this route',
       );
     }
     next();
@@ -56,12 +56,12 @@ const authenticateWsUser = async (req) => {
     if (name === 'refreshToken') {
       refreshToken = cookieParser.signedCookie(
         cookie.value,
-        process.env.JWT_SECRET
+        process.env.JWT_SECRET,
       );
     } else if (name === 'accessToken') {
       accessToken = cookieParser.signedCookie(
         cookie.value,
-        process.env.JWT_SECRET
+        process.env.JWT_SECRET,
       );
     }
   });
@@ -89,7 +89,7 @@ const authenticateWsUser = async (req) => {
 };
 const checkForTestUser = (req, res, next) => {
   if (req.user.testUser) {
-    throw new CustomError.BadRequestError('Demo user. Read Only!');
+    throw new CustomError.BadRequestError('Demo user - Read Only!');
   }
   next();
 };

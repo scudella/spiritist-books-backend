@@ -6,6 +6,6 @@ const ErrorElement = () => {
   const error = useRouteError();
   console.log(error);
 
-  return <h4>{t('Ocorreu um erro...')}</h4>;
+  return <h4>{t('Ocorreu um erro') + '...'}</h4>;
 };
 export default ErrorElement;

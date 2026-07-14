@@ -157,7 +157,7 @@ const EditBook = () => {
             className='btn btn-block form-btn'
             disabled={isSubmitting}
           >
-            {isSubmitting ? t('enviando...') : t('enviar')}
+            {isSubmitting ? t('enviando') + '...' : t('enviar')}
           </button>
         </div>
       </Form>

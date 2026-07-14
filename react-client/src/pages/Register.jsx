@@ -99,7 +99,7 @@ const Register = () => {
         <FormRow type='email' name='email' />
         <FormRow type='password' name='password' labelText={t('senha')} />
         <button type='submit' className='btn btn-block' disabled={isSubmitting}>
-          {isSubmitting ? t('enviando...') : t('enviar')}
+          {isSubmitting ? t('enviando') + '...' : t('enviar')}
         </button>
         <GoogleButton clientId={clientId} register />
         <p>

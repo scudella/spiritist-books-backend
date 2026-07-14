@@ -29,29 +29,31 @@ const Book = ({
         <div></div>
         <div className='info'>
           <h5>{title}</h5>
-          <p>{authors.toString()}</p>
+          <p>{authors.join(', ')}</p>
         </div>
       </header>
       <div className='content'>
         <div className='content-center'>
-          <BookInfo icon={<FaLocationArrow />} text={currentPublisher} />
-          <BookInfo icon={<FaCalendarAlt />} text={publishedYear} />
+          <BookInfo icon={<FaLocationArrow />} label={currentPublisher} />
+          <BookInfo icon={<FaCalendarAlt />} label={publishedYear} />
           <BookInfo
             icon={<IoCheckmarkOutline />}
-            text={
+            label={
               spiritualAuthors.length === 1
                 ? t('Autor(a) Espiritual')
                 : t('Autores Espirituais')
             }
           />
-          <BookInfo
-            icon={<IoStarOutline />}
-            text={
-              spiritualAuthors.length === 1
-                ? spiritualAuthors
-                : t('Espíritos Diversos')
-            }
-          />
+          {spiritualAuthors.length > 0 && (
+            <BookInfo
+              icon={<IoStarOutline />}
+              text={
+                spiritualAuthors.length === 1
+                  ? spiritualAuthors
+                  : t('Espíritos Diversos')
+              }
+            />
+          )}
         </div>
         {user.role === 'admin' && (
           <footer className='actions'>
@@ -130,6 +132,7 @@ const Wrapper = styled.article`
     h5 {
       margin-bottom: 0.5rem;
       text-transform: none;
+      color: var(--primary-800);
     }
     p {
       margin: 0;

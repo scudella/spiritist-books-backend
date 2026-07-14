@@ -86,7 +86,7 @@ const Login = () => {
         <FormRow type='email' name='email' />
         <FormRow type='password' name='password' labelText={t('senha')} />
         <button type='submit' className='btn btn-block' disabled={isSubmitting}>
-          {isSubmitting ? t('enviando...') : t('enviar')}
+          {isSubmitting ? t('enviando') + '...' : t('enviar')}
         </button>
         <button type='button' className='btn btn-block' onClick={loginDemoUser}>
           {t('explore o app')}

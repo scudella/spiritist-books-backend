@@ -12,7 +12,7 @@ const SubmitBtn = ({ formBtn }) => {
       className={`btn btn-block ${formBtn && 'form-btn'} `}
       disabled={isSubmitting}
     >
-      {isSubmitting ? t('enviando...') : t('enviar')}
+      {isSubmitting ? t('enviando') + '...' : t('enviar')}
     </button>
   );
 };
