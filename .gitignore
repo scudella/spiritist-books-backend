@@ -5,3 +5,4 @@ public/video
 public/.vscode
 .env*
 TODO
+.aider*

@@ -73,17 +73,17 @@ app.use(
         `${process.env.CLOUDINARY_IMAGES}`,
       ],
     },
-  })
+  }),
 );
 app.use(
   helmet.crossOriginOpenerPolicy({
     policy: 'same-origin-allow-popups',
-  })
+  }),
 );
 app.use(
   helmet.referrerPolicy({
     policy: 'strict-origin-when-cross-origin',
-  })
+  }),
 );
 
 app.use(cors());
@@ -99,7 +99,7 @@ app.use(mongoSanitize());
 app.use(express.static(path.resolve(__dirname, './react-client/dist')));
 app.use(
   '/user',
-  express.static(path.resolve(__dirname, './react-client/dist'))
+  express.static(path.resolve(__dirname, './react-client/dist')),
 );
 
 app.use('/api/v1/auth', authRouter);
@@ -119,11 +119,15 @@ const start = async () => {
   try {
     await connectDB(process.env.MONGO_URL);
     app.listen(port, () =>
-      console.log(`Server is listening on port ${port}...`)
+      console.log(`Server is listening on port ${port}...`),
     );
   } catch (error) {
     console.log(error);
   }
 };
 
-start();
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  start();
+}
+
+export default app;
