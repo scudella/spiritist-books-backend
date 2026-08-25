@@ -6,3 +6,5 @@ public/.vscode
 .env*
 TODO
 .aider*
+serverless.yml
+.serverless
