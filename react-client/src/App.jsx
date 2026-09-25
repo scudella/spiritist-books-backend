@@ -130,7 +130,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <RouterProvider router={router} />;
+      <RouterProvider router={router} />
       {addLibrary('https://accounts.google.com/gsi/client')}
     </>
   );
