@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
-import 'express-async-errors';
 import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
@@ -17,11 +16,17 @@ import * as prometheusClient from 'prom-client';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import * as cloudy from 'cloudinary';
+import rateLimiter from 'express-rate-limit';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
+
+const allowedOrigins = [
+  'https://spiritist-books.scudella.net.br',
+  'https://livros-espiritas.scudella.net.br',
+];
 
 const register = new prometheusClient.Registry();
 // Enable the collection of default Node.js process metrics
@@ -35,8 +40,13 @@ const httpRequestCounter = new prometheusClient.Counter({
 });
 
 // Middleware to track request count
-app.use((req, _, next) => {
-  httpRequestCounter.inc({ method: req.method, path: req.path });
+app.use((req, res, next) => {
+  res.on('finish', () => {
+    const routePath = req.route
+      ? `${req.baseUrl || ''}${req.route.path}`
+      : req.path;
+    httpRequestCounter.inc({ method: req.method, path: routePath });
+  });
   next();
 });
 
@@ -55,6 +65,15 @@ cloudinary.config({
 });
 
 app.set('trust proxy', 1);
+
+// Security & Parsing Middleware Chain
+const apiLimiter = rateLimiter({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  ipv6Subnet: 56,
+});
 
 app.use(
   helmet.contentSecurityPolicy({
@@ -86,31 +105,61 @@ app.use(
   }),
 );
 
-app.use(cors());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (e.g., Mobile Apps, Postman, Curl)
+      if (!origin) return callback(null, true);
 
+      // Allow allowed web domains
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        return callback(null, true);
+      }
+
+      // Reject other web origins
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+);
+
+const logFormat = process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+app.use(express.static(path.resolve(__dirname, './react-client/dist')));
+
+// Parsers MUST precede mongoSanitize
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
-app.use(mongoSanitize());
 
-app.use(express.static(path.resolve(__dirname, './react-client/dist')));
-app.use(
-  '/user',
-  express.static(path.resolve(__dirname, './react-client/dist')),
-);
+app.use((req, res, next) => {
+  if (req.body) mongoSanitize.sanitize(req.body);
+  if (req.params) mongoSanitize.sanitize(req.params);
+  if (req.query) {
+    // Sanitize query keys without reassigning req.query itself
+    for (const key in req.query) {
+      if (key.startsWith('$') || key.includes('.')) {
+        delete req.query[key];
+      }
+    }
+  }
+  next();
+});
 
-app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/books', bookRouter);
+app.use('/api/v1/auth', apiLimiter, authRouter);
+app.use('/api/v1/users', apiLimiter, userRouter);
+app.use('/api/v1/books', apiLimiter, bookRouter);
 
 // Send front-end files directly from client/dist
-app.get('*', (req, res) => {
+app.get('/*path', (req, res) => {
   res.sendFile(path.resolve(__dirname, './react-client/dist', 'index.html'));
 });
 
+// Express 5 wildcard 404 handler
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 

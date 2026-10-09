@@ -7,7 +7,7 @@ dotenv.config();
 const createJWT = ({ payload }) => {
   if (!process.env.JWT_SECRET) {
     throw new CustomError.CustomAPIError(
-      'Internal server error. No jwt secret.'
+      'Internal server error. No jwt secret.',
     );
   }
   const token = jwt.sign(payload, process.env.JWT_SECRET);
@@ -19,7 +19,7 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
   const refreshTokenJWT = createJWT({ payload: { user, refreshToken } });
 
   const oneDay = 1000 * 60 * 60 * 24;
-  const longerExp = 1000 * 60 * 60 * 24 * 30;
+  const longerExp = 1000 * 60 * 60 * 24 * 7;
   res.cookie('accessToken', accessTokenJWT, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -37,7 +37,7 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
 const isTokenValid = (token) => {
   if (!process.env.JWT_SECRET) {
     throw new CustomError.CustomAPIError(
-      'Internal server error. No jwt secret.'
+      'Internal server error. No jwt secret.',
     );
   }
 
