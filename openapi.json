@@ -1,0 +1,292 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Spiritist Books API",
+    "version": "1.0.0",
+    "description": "API documentation for the Spiritist Books backend platform."
+  },
+  "servers": [
+    {
+      "url": "https://spiritist-books-backend.scudella.net.br/api/v1",
+      "description": "Production Server"
+    },
+    {
+      "url": "http://localhost:5000/api/v1",
+      "description": "Local Development Server"
+    }
+  ],
+  "paths": {
+    "/books": {
+      "get": {
+        "tags": ["Books"],
+        "summary": "Get list of books",
+        "description": "Retrieve books with optional filtering and pagination.",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort order for returned books",
+            "schema": {
+              "type": "string",
+              "enum": ["a-z", "z-a", "newest", "oldest"]
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Filter by book title",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authors",
+            "in": "query",
+            "description": "Filter by physical author name",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "spiritualAuthors",
+            "in": "query",
+            "description": "Filter by spiritual author name",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "originalPublisher",
+            "in": "query",
+            "description": "Filter by original publisher",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "currentPublisher",
+            "in": "query",
+            "description": "Filter by current publisher",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "publishedYear",
+            "in": "query",
+            "description": "Filter by published year",
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": { "type": "integer", "default": 1 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved books list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalBooks": {
+                      "type": "integer",
+                      "example": 42
+                    },
+                    "page": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "nbPages": {
+                      "type": "integer",
+                      "example": 5
+                    },
+                    "books": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Book"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books/{id}": {
+      "get": {
+        "tags": ["Books"],
+        "summary": "Get a single book",
+        "description": "Retrieve details of a specific book by its ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Unique book identifier",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "book": {
+                      "$ref": "#/components/schemas/Book"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Book not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "No book with id: 64b1f8e91234567890abcdef"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Register User",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": { "type": "string", "example": "john" },
+                  "lastName": { "type": "string", "example": "silva" },
+                  "email": { "type": "string", "example": "silva@example.com" },
+                  "password": { "type": "string", "example": "secret123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success! Please check your email to verify account"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Login User",
+        "description": "Authenticate user credentials and establish a session or cookie.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "example": "books@example.com" },
+                  "password": { "type": "string", "example": "secret123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Invalid Credentials"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "delete": {
+        "tags": ["Authentication"],
+        "summary": "Logout User",
+        "responses": {
+          "200": { "description": "user logged out!" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string", "example": "64b1f8e91234567890abcdef" },
+          "name": { "type": "string", "example": "Bob" },
+          "lastName": { "type": "string", "example": "Lee" },
+          "email": { "type": "string", "example": "john@example.com" },
+          "role": { "type": "string", "example": "user" },
+          "picture": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://example.com/avatar.jpg"
+          }
+        }
+      },
+      "Book": {
+        "type": "object",
+        "properties": {
+          "index": { "type": "string", "example": "64b1f8e91234567890abcdef" },
+          "title": { "type": "string", "example": "Nosso Lar" },
+          "authors": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["Francisco Cândido Xavier"]
+          },
+          "spiritualAuthors": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["André Luiz"]
+          },
+          "originalPublisher": { "type": "string", "example": "FEB" },
+          "currentPublisher": { "type": "string", "example": "FEB" },
+          "publishedYear": { "type": "string", "example": "1944" }
+        }
+      }
+    }
+  }
+}

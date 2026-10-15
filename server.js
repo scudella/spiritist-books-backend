@@ -6,7 +6,6 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import cors from 'cors';
-import { connectDB } from './db/connect.js';
 import authRouter from './routes/authRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import bookRouter from './routes/bookRouter.js';
@@ -17,6 +16,8 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import * as cloudy from 'cloudinary';
 import rateLimiter from 'express-rate-limit';
+import { apiReference } from '@scalar/express-api-reference';
+import fs from 'node:fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,6 +27,9 @@ const app = express();
 const allowedOrigins = [
   'https://spiritist-books.scudella.net.br',
   'https://livros-espiritas.scudella.net.br',
+  'https://spiritist-books-backend.scudella.net.br',
+  'http://localhost:5000',
+  'http://localhost:5173',
 ];
 
 const register = new prometheusClient.Registry();
@@ -56,6 +60,35 @@ app.get('/metrics', async (_, res) => {
   res.end(await register.metrics());
 });
 
+const openApiSpec = JSON.parse(
+  fs.readFileSync(path.resolve(process.cwd(), 'openapi.json'), 'utf-8'),
+);
+
+const faviconBuffer = fs.readFileSync(
+  path.resolve(process.cwd(), 'public/favicon.ico'),
+);
+const faviconDataUri = `data:image/x-icon;base64,${faviconBuffer.toString('base64')}`;
+
+// Serve Scalar UI
+app.get(
+  '/docs',
+  apiReference({
+    spec: { content: openApiSpec },
+    theme: 'purple',
+    telemetry: false,
+    hideClientButton: true,
+    title: 'API v1',
+    slug: 'api-v1',
+    showSidebar: false,
+    hideModels: true,
+    featuredClients: [],
+    hiddenClients: true,
+    setPageTitle: ({ _, document }) => `${document.title}`,
+    showDeveloperTools: 'never',
+    favicon: faviconDataUri,
+  }),
+);
+
 const cloudinary = cloudy.v2;
 
 cloudinary.config({
@@ -69,7 +102,7 @@ app.set('trust proxy', 1);
 // Security & Parsing Middleware Chain
 const apiLimiter = rateLimiter({
   windowMs: 15 * 60 * 1000,
-  limit: 100,
+  limit: 300,
   standardHeaders: true,
   legacyHeaders: false,
   ipv6Subnet: 56,
@@ -112,16 +145,16 @@ app.use(
       if (!origin) return callback(null, true);
 
       // Allow allowed web domains
-      if (allowedOrigins.indexOf(origin) !== -1) {
+      if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
 
       // Reject other web origins
-      return callback(new Error('Not allowed by CORS'));
+      return callback(null, false);
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   }),
 );
 
@@ -130,7 +163,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.use(express.static(path.resolve(__dirname, './react-client/dist')));
+// when serving the front-end
+// app.use(express.static(path.resolve(__dirname, './react-client/dist')));
 
 // Parsers MUST precede mongoSanitize
 app.use(express.json());
@@ -154,10 +188,16 @@ app.use('/api/v1/auth', apiLimiter, authRouter);
 app.use('/api/v1/users', apiLimiter, userRouter);
 app.use('/api/v1/books', apiLimiter, bookRouter);
 
-// Send front-end files directly from client/dist
-app.get('/*path', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './react-client/dist', 'index.html'));
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.resolve(process.cwd(), 'public/favicon.ico'));
 });
+
+// Send front-end files directly from client/dist
+// disabled due to the /docs and the client being
+// rendered by other means
+// app.get('/*path', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, './react-client/dist', 'index.html'));
+// });
 
 // Express 5 wildcard 404 handler
 app.use(notFoundMiddleware);
