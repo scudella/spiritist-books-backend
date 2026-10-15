@@ -191,6 +191,9 @@ app.use('/api/v1/books', apiLimiter, bookRouter);
 app.get('/favicon.ico', (req, res) => {
   res.sendFile(path.resolve(process.cwd(), 'public/favicon.ico'));
 });
+app.get('/css/style.css', (req, res) => {
+  res.sendFile(path.resolve(process.cwd(), 'public/css/style.css'));
+});
 
 // Send front-end files directly from client/dist
 // disabled due to the /docs and the client being
