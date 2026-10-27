@@ -1,32 +1,34 @@
 export const filterBooksByString = (books, property, bookString) => {
-  const filteredBooks = books.filter((book) => {
-    if (book[property]?.toLowerCase().includes(bookString.toLowerCase())) {
+  const normalizedQuery = removeAccents(bookString).toLowerCase();
+  return books.filter((book) => {
+    const normalizedBookString = removeAccents(book[property])?.toLowerCase();
+    if (normalizedBookString?.includes(normalizedQuery)) {
       return book;
     }
   });
-  return filteredBooks;
 };
 
 export const filterBooksByStringNumber = (books, property, bookString) => {
-  const filteredBooks = books.filter((book) => {
+  return books.filter((book) => {
     if (book[property]?.toString().includes(bookString)) {
       return book;
     }
   });
-  return filteredBooks;
 };
 
 export const filterBooksByArray = (books, property, bookString) => {
-  const filteredBooks = books.filter((book) => {
+  let normalizedQuery = removeAccents(bookString).toLowerCase();
+  normalizedQuery = mapAliases(normalizedQuery);
+
+  return books.filter((book) => {
     if (
       book[property]?.find((item) =>
-        item.toLowerCase().includes(bookString.toLowerCase()),
+        removeAccents(item).toLowerCase().includes(normalizedQuery),
       )
     ) {
       return book;
     }
   });
-  return filteredBooks;
 };
 
 export function sortBooks(books, sort) {
@@ -65,4 +67,18 @@ export function sortBooks(books, sort) {
         console.log('compare error');
     }
   });
+}
+
+export function removeAccents(str) {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function mapAliases(query) {
+  return (
+    query
+      // Handle full name variant first
+      .replace(/\bchico xavier\b/gi, 'francisco candido xavier')
+      // Handle standalone 'chico'
+      .replace(/\bchico\b/gi, 'francisco')
+  );
 }

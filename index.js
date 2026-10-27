@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import serverlessExpress from '@codegenie/serverless-express';
 import app from './server.js';
 import { connectDB } from './db/connect.js';
@@ -42,9 +43,32 @@ if (!process.env.AWS_LAMBDA_FUNCTION_NAME) {
   const PORT = process.env.PORT || 3000;
   const HOST = process.env.HOST || '0.0.0.0';
 
+  if (!process.env.MONGO_URL) {
+    console.error('FATAL: MONGO_URL environment variable is missing.');
+    process.exit(1);
+  }
+
+  let server;
+
+  const gracefulShutdown = (signal) => {
+    console.log(`${signal} received. Closing HTTP server...`);
+    if (server) {
+      server.close(() => {
+        console.log('HTTP server closed. Exiting process.');
+        process.exit(0);
+      });
+    } else {
+      console.log('Server was not running yet. Exiting process.');
+      process.exit(0);
+    }
+  };
+
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+
   connectDB(process.env.MONGO_URL)
     .then(() => {
-      app.listen(PORT, HOST, () => {
+      server = app.listen(PORT, HOST, () => {
         console.log(`Server listening on http://${HOST}:${PORT}`);
       });
     })
