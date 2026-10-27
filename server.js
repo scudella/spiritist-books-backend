@@ -60,14 +60,34 @@ app.get('/metrics', async (_, res) => {
   res.end(await register.metrics());
 });
 
-const openApiSpec = JSON.parse(
-  fs.readFileSync(path.resolve(process.cwd(), 'openapi.json'), 'utf-8'),
-);
+const rootDir = process.cwd();
 
-const faviconBuffer = fs.readFileSync(
-  path.resolve(process.cwd(), 'public/favicon.ico'),
-);
-const faviconDataUri = `data:image/x-icon;base64,${faviconBuffer.toString('base64')}`;
+// Safe loading for openapi.json
+let openApiSpec = {};
+const openApiPath = path.resolve(rootDir, 'openapi.json');
+if (fs.existsSync(openApiPath)) {
+  try {
+    openApiSpec = JSON.parse(fs.readFileSync(openApiPath, 'utf-8'));
+  } catch (err) {
+    console.error('Failed to parse openapi.json:', err);
+  }
+} else {
+  console.warn(`openapi.json not found at ${openApiPath}`);
+}
+
+// Safe loading for favicon
+let faviconDataUri = '';
+const faviconPath = path.resolve(rootDir, 'public/favicon.ico');
+if (fs.existsSync(faviconPath)) {
+  try {
+    const faviconBuffer = fs.readFileSync(faviconPath);
+    faviconDataUri = `data:image/x-icon;base64,${faviconBuffer.toString('base64')}`;
+  } catch (err) {
+    console.warn('Failed to encode favicon.ico:', err);
+  }
+} else {
+  console.warn(`public/favicon.ico not found at ${faviconPath}`);
+}
 
 // Serve Scalar UI
 app.get(
@@ -85,7 +105,7 @@ app.get(
     hiddenClients: true,
     setPageTitle: ({ _, document }) => `${document.title}`,
     showDeveloperTools: 'never',
-    favicon: faviconDataUri,
+    ...(faviconDataUri && { favicon: faviconDataUri }),
   }),
 );
 
@@ -189,10 +209,19 @@ app.use('/api/v1/users', apiLimiter, userRouter);
 app.use('/api/v1/books', apiLimiter, bookRouter);
 
 app.get('/favicon.ico', (req, res) => {
-  res.sendFile(path.resolve(process.cwd(), 'public/favicon.ico'));
+  const filePath = path.resolve(process.cwd(), 'public/favicon.ico');
+  if (fs.existsSync(filePath)) {
+    return res.sendFile(filePath);
+  }
+  return res.status(404).end();
 });
+
 app.get('/css/style.css', (req, res) => {
-  res.sendFile(path.resolve(process.cwd(), 'public/css/style.css'));
+  const filePath = path.resolve(process.cwd(), 'public/css/style.css');
+  if (fs.existsSync(filePath)) {
+    return res.sendFile(filePath);
+  }
+  return res.status(404).end();
 });
 
 // Send front-end files directly from client/dist

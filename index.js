@@ -1,4 +1,7 @@
-import 'dotenv/config';
+// Only load dotenv in local development / PM2 environments
+if (!process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  await import('dotenv/config');
+}
 import serverlessExpress from '@codegenie/serverless-express';
 import app from './server.js';
 import { connectDB } from './db/connect.js';
