@@ -6,6 +6,7 @@ import BookInfo from './BookInfo';
 import { useTranslation } from 'react-i18next';
 import VerticalScrollMenu from './VerticalScrollMenu';
 import { BookThumbnail } from '.';
+import { useState } from 'react';
 
 const BookDetails = ({
   index,
@@ -25,6 +26,13 @@ const BookDetails = ({
   user,
 }) => {
   const { t } = useTranslation('book');
+  const [isExpanded, setIsExpanded] = useState(false);
+  const fullText = authors.join(', ');
+  const shouldTruncate = authors.length > 4;
+  const displayText =
+    shouldTruncate && !isExpanded
+      ? `${fullText.substring(0, 120).replace(/,\s*[^,]*$/, '')}...`
+      : fullText;
 
   return (
     <Wrapper>
@@ -32,7 +40,17 @@ const BookDetails = ({
         <div className='main-icon box1'>{authors[0].charAt(0)}</div>
         <div className='info box2'>
           <h5>{title}</h5>
-          <p>{authors.join(', ')}</p>
+          <p>
+            {displayText}{' '}
+            {shouldTruncate && (
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className='link'
+              >
+                {isExpanded ? t('menos') : t('mais')}
+              </button>
+            )}
+          </p>
         </div>
         <div className='box3'>
           {spiritualAuthors.length === 1 ? (
@@ -180,6 +198,15 @@ const Wrapper = styled.article`
   }
   .boxPlaceHolder {
     visibility: collapse;
+  }
+  .link {
+    background-color: unset;
+    border: none;
+    color: var(--primary-700);
+    text-decoration-line: underline;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
   }
 
   @media (min-width: 800px) {

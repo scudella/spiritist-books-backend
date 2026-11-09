@@ -4,7 +4,7 @@ import { Link, Form } from 'react-router-dom';
 import styled from 'styled-components';
 import BookInfo from './BookInfo';
 import { useTranslation } from 'react-i18next';
-import { DeleteBook } from '../pages';
+import { useState } from 'react';
 
 const Book = ({
   index,
@@ -16,6 +16,13 @@ const Book = ({
   user,
 }) => {
   const { t } = useTranslation('book');
+  const [isExpanded, setIsExpanded] = useState(false);
+  const fullText = authors.join(', ');
+  const shouldTruncate = authors.length > 4;
+  const displayText =
+    shouldTruncate && !isExpanded
+      ? `${fullText.substring(0, 120).replace(/,\s*[^,]*$/, '')}...`
+      : fullText;
 
   return (
     <Wrapper>
@@ -29,7 +36,17 @@ const Book = ({
         <div></div>
         <div className='info'>
           <h5>{title}</h5>
-          <p>{authors.join(', ')}</p>
+          <p>
+            {displayText}{' '}
+            {shouldTruncate && (
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className='link'
+              >
+                {isExpanded ? t('menos') : t('mais')}
+              </button>
+            )}
+          </p>
         </div>
       </header>
       <div className='content'>
@@ -178,5 +195,14 @@ const Wrapper = styled.article`
   }
   .edit-btn {
     margin-right: 0.5rem;
+  }
+  .link {
+    background-color: unset;
+    border: none;
+    color: var(--primary-700);
+    text-decoration-line: underline;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
   }
 `;
